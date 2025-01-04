@@ -1,0 +1,5 @@
+int main()
+{
+    int a = sum(2, 1);
+    printf("a = %d\n", a);
+}
