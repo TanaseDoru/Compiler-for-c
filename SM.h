@@ -35,14 +35,15 @@ typedef enum opCodeType
     GOTO,
     INC_SCOPE,
     DEC_SCOPE,
-    RET
+    RET,
+    CAST
 } opCodeType_t;
 
 char *opCodeName[] = {"Decl", "Store", "Push",
                       "ADD", "SUB", "MUL", "DIV", "EQ", "LE", "LT",
                       "GE", "GT", "Convert", "Check", "HALT", "NEQ",
                       "Printf", "Scanf", "Jmp_false", "goto", "IncScope",
-                      "DecScope", "Return"};
+                      "DecScope", "Return", "Cast"};
 
 struct instruction
 {
@@ -67,10 +68,17 @@ struct lbs *newLbRec()
 
 struct instruction instructionVector[MAX_INSTRUCTIONS];
 
-double stack[MAX_STACK] = {}; // Stack of values
-int top = -1;                 // Top of stack
-int pc = 0;                   // Program counter
-int instructionIndex = 0;     // index pentru instructionVector
+struct stackStruct
+{
+    double val;
+    enum varType type;
+};
+typedef struct stackStruct stackStruct;
+
+stackStruct stack[MAX_STACK] = {}; // Stack of values
+int top = -1;                      // Top of stack
+int pc = 0;                        // Program counter
+int instructionIndex = 0;          // index pentru instructionVector
 int entryPoint = -1;
 
 void fetchExecuteCycle()
@@ -79,7 +87,7 @@ void fetchExecuteCycle()
     varRecord *ptr;
     if (entryPoint == -1)
     {
-        printf("FATAL ERROR: No main function found\n");
+        printf("Error: No main function found\n");
         return;
     }
     pc = entryPoint;
@@ -100,7 +108,7 @@ void fetchExecuteCycle()
             printf("Stack:");
             for (int i = 0; i <= top; i++)
             {
-                printf("%lg ", stack[i]);
+                printf("%lg ", stack[i].val);
             }
             printf("\n");
         }
@@ -127,11 +135,24 @@ void fetchExecuteCycle()
                     ir.opCode = HALT;
                     break;
                 }
-                stack[++top] = ptr->value;
+                stack[++top].val = ptr->value;
+                stack[top].type = ptr->type;
             }
             else
             {
-                stack[++top] = ir.value;
+                stack[++top].val = ir.value;
+                if (strcmp("double", ir.buffer) == 0)
+                {
+                    stack[top].type = t_double;
+                }
+                else if (strcmp("int", ir.buffer) == 0)
+                {
+                    stack[top].type = t_integer;
+                }
+                else if (strcmp("float", ir.buffer) == 0)
+                {
+                    stack[top].type = t_float;
+                }
             }
             break;
         case STORE:
@@ -142,13 +163,30 @@ void fetchExecuteCycle()
                 break;
             }
             ptr = getVar(ir.buffer);
+
             if (ptr == NULL)
             {
                 printf("line %d: Variable not declared %s\n", ir.currentLine, ir.buffer);
                 ir.opCode = HALT;
                 break;
             }
-            ptr->value = stack[top--];
+            if (ptr->type != stack[top].type)
+            {
+                printf("Line %d: Different variable type used for %s.\n", ir.currentLine, ptr->name);
+                ir.opCode = HALT;
+                break;
+            }
+            ptr->value = stack[top--].val;
+            break;
+        case CAST:
+            if (top < 0)
+            {
+                printf("Line %d: ERROR: stack index is below 0\n", ir.currentLine);
+                ir.opCode = HALT;
+                break;
+            }
+
+            stack[top].type = ir.value;
             break;
         case PRINTF:
             if (ir.value == 0) // PRINTF_SIMPLE (only format)
@@ -172,7 +210,7 @@ void fetchExecuteCycle()
                 char buffer[1024];
                 char varName[1024] = "";
                 strcpy(buffer, ir.buffer + strlen("printf(\"")); // eliminare printf(" de la inceput
-                char *p = strchr(buffer, '\"');
+                char *p = strrchr(buffer, '\"');
                 p += 2;                                          // eliminare ",
                 int formatSize = strlen(buffer) - strlen(p) - 2; //-2 pentru ca am facut p += 2
                 for (int i = 0; i < formatSize && buffer[i] != '\"'; i++)
@@ -194,6 +232,7 @@ void fetchExecuteCycle()
                                 p++;
                             }
 
+                            varName[j] = '\0';
                             ptr = getVar(varName);
                             if (ptr == 0)
                             {
@@ -209,6 +248,7 @@ void fetchExecuteCycle()
                                 varName[j++] = p[0];
                                 p++;
                             }
+                            varName[j] = '\0';
                             ptr = getVar(varName);
                             if (ptr == 0)
                             {
@@ -231,6 +271,7 @@ void fetchExecuteCycle()
                                 varName[j++] = p[0];
                                 p++;
                             }
+                            varName[j] = '\0';
                             ptr = getVar(varName);
                             if (ptr == 0)
                             {
@@ -245,7 +286,7 @@ void fetchExecuteCycle()
                             ir.opCode = HALT;
                             break;
                         }
-
+                        j = 0;
                         p++;
                         continue;
                     }
@@ -262,10 +303,11 @@ void fetchExecuteCycle()
             break;
         case SCANF:
             char buffer[1024];
+            char buf[245];
             double val = 0;
             char varName[1024] = "";
             strcpy(buffer, ir.buffer + strlen("scanf(\"")); // eliminare scnaf(" de la inceput
-            char *p = strchr(buffer, '\"');
+            char *p = strrchr(buffer, '\"');
             p += 2;                                          // eliminare ",
             int formatSize = strlen(buffer) - strlen(p) - 2; //-2 pentru ca am facut p += 2
             for (int i = 0; i < formatSize && buffer[i] != '\"'; i++)
@@ -293,6 +335,7 @@ void fetchExecuteCycle()
                             p++;
                         }
                         scanf("%lf", &val);
+                        varName[j] = '\0';
                         ptr = getVar(varName);
                         if (ptr == 0)
                         {
@@ -308,7 +351,7 @@ void fetchExecuteCycle()
                             varName[j++] = p[0];
                             p++;
                         }
-                        scanf("%lf", &val);
+                        varName[j] = '\0';
                         ptr = getVar(varName);
                         if (ptr == 0)
                         {
@@ -316,7 +359,18 @@ void fetchExecuteCycle()
                             ir.opCode = HALT;
                             break;
                         }
-                        ptr->value = (float)val;
+                        scanf("%s", buf);
+                        if (buf[strlen(buf) - 1] == 'f')
+                        {
+                            buf[strlen(buf) - 1] = '\0';
+                        }
+                        else
+                        {
+                            printf("\nWrong type for variable %s\n", varName);
+                            ir.opCode = HALT;
+                            break;
+                        }
+                        ptr->value = (float)atof(buf);
                         break;
                     case 'l':
                         i++;
@@ -332,6 +386,7 @@ void fetchExecuteCycle()
                             p++;
                         }
                         scanf("%lf", &val);
+                        varName[j] = '\0';
                         ptr = getVar(varName);
                         if (ptr == 0)
                         {
@@ -347,6 +402,7 @@ void fetchExecuteCycle()
                         break;
                     }
                     p++;
+                    j = 0;
                     continue;
                 }
                 else if (buffer[0] == ' ')
@@ -364,20 +420,20 @@ void fetchExecuteCycle()
             pc = ir.value;
             break;
         case JMP_FALSE:
-            if (stack[top--] == 0)
+            if (stack[top--].val == 0)
                 pc = ir.value;
             break;
         case RET:
-            if (top == -1)
+            if (top == -1 || (top == 0 && strcmp(ir.buffer, "void") != 0)) // daca nu mai avem adresa de return si daca functia nu este void atunci programul e gata
             {
                 break;
             }
             if (strcmp(ir.buffer, "void") == 0)
             {
-                pc = stack[top--];
+                pc = stack[top--].val;
                 break;
             }
-            ir.value = stack[top - 1];
+            ir.value = stack[top - 1].val;
             stack[top - 1] = stack[top];
             top--;
             pc = ir.value;
@@ -389,49 +445,89 @@ void fetchExecuteCycle()
             decreaseScope();
             break;
         case ADD:
-            stack[top - 1] = stack[top] + stack[top - 1];
+            stack[top - 1].val = stack[top].val + stack[top - 1].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case SUB:
-            stack[top - 1] = stack[top - 1] - stack[top];
+            stack[top - 1].val = stack[top - 1].val - stack[top].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case MUL:
-            stack[top - 1] = stack[top] * stack[top - 1];
+            stack[top - 1].val = stack[top].val * stack[top - 1].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case DIV:
-            if (stack[top - 1] == 0)
+            if (stack[top].val == 0)
             {
                 printf("line %d: Division by 0 not possible\n", ir.currentLine);
                 ir.opCode = HALT;
                 break;
             }
-            stack[top - 1] = stack[top - 1] / stack[top];
+            stack[top - 1].val = stack[top - 1].val / stack[top].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case LT:
-            stack[top - 1] = stack[top - 1] < stack[top];
+            stack[top - 1].val = stack[top - 1].val < stack[top].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case LE:
-            stack[top - 1] = stack[top - 1] <= stack[top];
+            stack[top - 1].val = stack[top - 1].val <= stack[top].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case GT:
-            stack[top - 1] = stack[top - 1] > stack[top];
+            stack[top - 1].val = stack[top - 1].val > stack[top].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case GE:
-            stack[top - 1] = stack[top - 1] >= stack[top];
+            stack[top - 1].val = stack[top - 1].val >= stack[top].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case EQ:
-            stack[top - 1] = stack[top] == stack[top - 1];
+            stack[top - 1].val = stack[top].val == stack[top - 1].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         case NEQ:
-            stack[top - 1] = stack[top] != stack[top - 1];
+            stack[top - 1].val = stack[top].val != stack[top - 1].val;
+            if (stack[top].type == t_double)
+                stack[top - 1].type = t_double;
+            if (stack[top].type == t_float && stack[top - 1].type != t_double)
+                stack[top - 1].type = t_float;
             top--;
             break;
         }

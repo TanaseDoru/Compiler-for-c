@@ -61,19 +61,23 @@ extern int yydebug;
     T_INT_KW = 262,                /* T_INT_KW  */
     T_FLOAT_KW = 263,              /* T_FLOAT_KW  */
     T_DOUBLE_KW = 264,             /* T_DOUBLE_KW  */
-    T_IF_KW = 265,                 /* T_IF_KW  */
-    T_WHILE_KW = 266,              /* T_WHILE_KW  */
-    T_ELSE_KW = 267,               /* T_ELSE_KW  */
-    T_VOID_KW = 268,               /* T_VOID_KW  */
-    T_RETURN = 269,                /* T_RETURN  */
-    T_COMM = 270,                  /* T_COMM  */
-    T_ERROR = 271,                 /* T_ERROR  */
-    T_PRINTF_PARAM = 272,          /* T_PRINTF_PARAM  */
-    T_PRINTF_SIMPLE = 273,         /* T_PRINTF_SIMPLE  */
-    T_SCANF = 274,                 /* T_SCANF  */
-    T_INTEGER_VAL = 275,           /* T_INTEGER_VAL  */
-    T_IDENTIFIER = 276,            /* T_IDENTIFIER  */
-    T_DOUBLE_VAL = 277             /* T_DOUBLE_VAL  */
+    T_INT_CAST = 265,              /* T_INT_CAST  */
+    T_FLOAT_CAST = 266,            /* T_FLOAT_CAST  */
+    T_DOUBLE_CAST = 267,           /* T_DOUBLE_CAST  */
+    T_IF_KW = 268,                 /* T_IF_KW  */
+    T_WHILE_KW = 269,              /* T_WHILE_KW  */
+    T_ELSE_KW = 270,               /* T_ELSE_KW  */
+    T_VOID_KW = 271,               /* T_VOID_KW  */
+    T_RETURN = 272,                /* T_RETURN  */
+    T_COMM = 273,                  /* T_COMM  */
+    T_ERROR = 274,                 /* T_ERROR  */
+    T_PRINTF_PARAM = 275,          /* T_PRINTF_PARAM  */
+    T_PRINTF_SIMPLE = 276,         /* T_PRINTF_SIMPLE  */
+    T_SCANF = 277,                 /* T_SCANF  */
+    T_INTEGER_VAL = 278,           /* T_INTEGER_VAL  */
+    T_IDENTIFIER = 279,            /* T_IDENTIFIER  */
+    T_DOUBLE_VAL = 280,            /* T_DOUBLE_VAL  */
+    T_FLOAT_VAL = 281              /* T_FLOAT_VAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -82,10 +86,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "source.y"
-int intval; char *str; double dval; struct lbs *lbVal;
+#line 30 "source.y"
+int intval; char *str; double dval; struct lbs *lbVal; float fval;
 
-#line 89 "source.tab.h"
+#line 93 "source.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

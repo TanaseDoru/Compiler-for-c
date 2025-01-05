@@ -20,6 +20,14 @@ enum varType
     t_void
 };
 
+char *varTypeName[] = {"Int", "Double", "Float", "Void"};
+
+enum programState
+{
+    parsing,
+    executing
+};
+
 struct varRecord
 {
     char *name;
@@ -33,6 +41,8 @@ typedef struct varRecord varRecord;
 /*****************************************
             GLOBAL VARIABLES
 *****************************************/
+
+enum programState currentState = parsing; // Folosit pentru a stabili daca programul este in modul de parsare sau de executare
 
 varRecord *(varScope[SCOPE_MAX_DEPTH]) = {NULL};
 int scopeLevel = -1; // Scope level incepe la -1 pentru ca functiile fac IncreaseScope, ca si main
@@ -53,9 +63,9 @@ int increaseScope()
 
 int decreaseScope()
 {
-    if (scopeLevel != 0)
+    if (scopeLevel != 0 || currentState == parsing)
         varScope[scopeLevel] = NULL;
-    if (scopeLevel == -1)
+    if (scopeLevel < 0)
     {
         printf("FATAL ERROR: SCOPE LEVEL IS BELOW 0\n");
         exit(-1);
@@ -66,13 +76,20 @@ int decreaseScope()
 varRecord *getVar(char *varName)
 {
     varRecord *ptr;
-    for (ptr = varScope[scopeLevel]; ptr != NULL; ptr = ptr->next)
-        if (strcmp(ptr->name, varName) == 0)
-        {
-            if (ptr->type == t_integer)
-                ptr->value = (int)ptr->value;
-            return ptr;
-        }
+    int scopeLevelCopy = scopeLevel;
+    while (scopeLevelCopy >= 0)
+    {
+        for (ptr = varScope[scopeLevelCopy]; ptr != NULL; ptr = ptr->next)
+            if (strcmp(ptr->name, varName) == 0)
+            {
+                if (ptr->type == t_integer)
+                    ptr->value = (int)ptr->value;
+                else if (ptr->type == t_float)
+                    ptr->value = (float)ptr->value;
+                return ptr;
+            }
+        scopeLevelCopy--;
+    }
     return NULL;
 }
 

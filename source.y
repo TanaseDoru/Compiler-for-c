@@ -18,6 +18,7 @@
     extern int lineNo;
 
     char currentfunction[256];
+    int isActiveCast = 0; // Folosit pentru a verifica daca se face cast, daca da, atunci nu se va da push la 2 valori(Una de primul tip si a doua de tipul cast-ului)
 
     enum varType currentType;    
 %}
@@ -26,7 +27,7 @@
             DATA TYPES
 **********************************/
 
-%union {int intval; char *str; double dval; struct lbs *lbVal;}
+%union {int intval; char *str; double dval; struct lbs *lbVal; float fval;}
 
 /**********************************
             START TOKEN
@@ -43,6 +44,7 @@
 %type <lbVal> midrule_lbs
 
 %token T_INT_KW T_FLOAT_KW T_DOUBLE_KW
+%token T_INT_CAST T_FLOAT_CAST T_DOUBLE_CAST
 %token <lbVal> T_IF_KW T_WHILE_KW
 %token T_ELSE_KW
 %token T_VOID_KW
@@ -55,6 +57,7 @@
 %token <intval> T_INTEGER_VAL
 %token <str> T_IDENTIFIER
 %token <dval> T_DOUBLE_VAL
+%token <fval> T_FLOAT_VAL
 
 %left '+' '-' T_EQ T_LE T_GE T_NEQ '>' '<'
 %left '*' '/'
@@ -82,10 +85,17 @@ function_declaration:
     T_VOID_KW T_IDENTIFIER                       {
                                                 if(strcmp($2, "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
-                                                addFunction($2, getCurrentIndex())->type = currentType; 
+                                                functionRecord*ptr = addFunction($2, getCurrentIndex());
+                                                if(ptr == NULL)
+                                                {
+                                                    errors++;
+                                                    printf("Line %d: Function %s already defined.\n",@1.first_line, $2);
+                                                    break;
+                                                }
+                                                ptr->type = currentType; 
                                                 strcpy(currentfunction, $2);
                                             }
-    '('                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line);}
+    '('                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line); increaseScope();}
     parameter_list ')'                  
     '{'                                     {
                                                 
@@ -94,6 +104,7 @@ function_declaration:
      '}'                                    {
                                                 
                                                 genCode(DEC_SCOPE, "", 0, -1, @1.first_line);
+                                                decreaseScope();
                                                 genCode(RET, "void", 0, 0, @1.first_line);
                                                 if(strcmp(currentfunction, "main")==0)
                                                     genCode(HALT, "", 0, -1, @1.first_line);
@@ -101,10 +112,16 @@ function_declaration:
     | type T_IDENTIFIER                       {
                                                 if(strcmp($2, "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
-                                                addFunction($2, getCurrentIndex())->type = currentType; 
+                                                functionRecord*ptr = addFunction($2, getCurrentIndex());
+                                                if(ptr == NULL)
+                                                {
+                                                    errors++;
+                                                    printf("Line %d: Function %s already defined.\n",@1.first_line, $2);
+                                                    break;
+                                                }
                                                 strcpy(currentfunction, $2);
                                             }
-    '('                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line);}
+    '('                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line); increaseScope();}
     parameter_list ')'                  
     '{'                                     {
                                                 
@@ -113,6 +130,7 @@ function_declaration:
      '}'                                    {
                                                 
                                                 genCode(DEC_SCOPE, "", 0, -1, @1.first_line);
+                                                decreaseScope();
                                                 genCode(RET, "", 0, -1, @1.first_line);
                                                 if(strcmp(currentfunction, "main")==0)
                                                     genCode(HALT, "", 0, -1, @1.first_line);
@@ -120,11 +138,31 @@ function_declaration:
 ;
 
 parameter_list:
-    | type T_IDENTIFIER parameter_list_tail         {genCode(DECL, $2, 0, 0, @1.first_line); genCode(STORE, $2, 0, 0, @1.first_line); }//addParamsToFunction(currentfunction, $2, currentType);}
+    | type T_IDENTIFIER parameter_list_tail         {
+                                                        genCode(DECL, $2, 0, 0, @1.first_line); 
+                                                        genCode(STORE, $2, 0, 0, @1.first_line); 
+                                                        varRecord* ptr = addVar($2, currentType);
+                                                        if(ptr == NULL) 
+                                                        {
+                                                            printf("line %d: Previous declaration of variable %s\n", @1.first_line, $2); 
+                                                            errors++;
+                                                            break;
+                                                        }
+                                                    }//addParamsToFunction(currentfunction, $2, currentType);}
 ;
 
 parameter_list_tail:
-    | ',' type T_IDENTIFIER parameter_list_tail {genCode(DECL, $3, 0, 0, @1.first_line); genCode(STORE, $3, 0, 0, @1.first_line); }
+    | ',' type T_IDENTIFIER parameter_list_tail {
+                                                    genCode(DECL, $3, 0, 0, @1.first_line); 
+                                                    genCode(STORE, $3, 0, 0, @1.first_line); 
+                                                    varRecord* ptr = addVar($3, currentType);
+                                                    if(ptr == NULL) 
+                                                    {
+                                                        printf("line %d: Previous declaration of variable %s\n", @1.first_line, $3); 
+                                                        errors++;
+                                                        break;
+                                                    }
+                                                }
 ;
 
 midrule_lbs:
@@ -185,13 +223,13 @@ instructions:
                                             }
  
     '(' expression ')'                      {$1->forJmpFalse = reserveLoc();}
-    '{'                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line);}
+    '{'                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line); increaseScope();}
     instructions                        
-    '}'                                     {genCode(DEC_SCOPE, "", 0, -1, @1.first_line); genCode(GOTO, "", $1->forGoto, 1, @1.first_line); backPatch($1->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, @1.first_line);}
+    '}'                                     {genCode(DEC_SCOPE, "", 0, -1, @1.first_line); decreaseScope(); genCode(GOTO, "", $1->forGoto, 1, @1.first_line); backPatch($1->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, @1.first_line);}
     instructions
-    |'{'                                    {genCode(INC_SCOPE, "", 0, -1, @1.first_line);}
+    |'{'                                    {genCode(INC_SCOPE, "", 0, -1, @1.first_line); increaseScope();}
     instructions
-    '}'                                     {genCode(DEC_SCOPE, "", 0, -1, @1.first_line);}
+    '}'                                     {genCode(DEC_SCOPE, "", 0, -1, @1.first_line); decreaseScope(); }
     instructions
     ;
 
@@ -219,194 +257,221 @@ instruction:
                                                 // }
                                             }
     | T_PRINTF_PARAM                        {
-                                                genCode(PRINTF, $1, 1, 2, @1.first_line);
+                                                genCode(PRINTF, strdup($1), 1, 2, @1.first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
-                                                // char buffer[1024];
-                                                // char varName[1024] = "";
-                                                // strcpy(buffer, $1 + strlen("printf(\""));  // eliminare printf(" de la inceput
-                                                // char* p = strchr(buffer, '\"');
-                                                // p+=2;                           //eliminare ",
-                                                // int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
-                                                // for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
-                                                // {
-                                                //     if(buffer[i] == '%')
-                                                //     {
-                                                //         varRecord* ptr = NULL;
-                                                //         while(p[0] == ' ') p++;
-                                                //         i++;
-                                                //         int j = 0;
-                                                //         strcpy(varName, "");
-                                                //         switch(buffer[i])
-                                                //         {
-                                                //             case 'd':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
+                                                char buffer[1024];
+                                                char varName[1024] = "";
+                                                strcpy(buffer, $1 + strlen("printf(\""));  // eliminare printf(" de la inceput
+                                                char* p = strrchr(buffer, '\"');
+                                                p+=2;                           //eliminare ",
+                                                int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
+                                                int j;
+                                                for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
+                                                {
+                                                    if(buffer[i] == '%')
+                                                    {
+                                                        varRecord* ptr = NULL;
+                                                        while(p[0] == ' ') p++;
+                                                        i++;
+                                                        
+                                                        switch(buffer[i])
+                                                        {
+                                                            case 'd':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                varName[j] = '\0';
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_integer)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", @1.first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                            break;
+                                                            case 'f':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                varName[j] = '\0';
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_float)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", @1.first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            case 'l':
+                                                                i++;
+                                                                if(buffer[i] != 'f')
+                                                                {
+                                                                    errors++;
+                                                                    printf("line %d: Symbol not recognized by %% \n", @1.first_line);
+                                                                    break;
+                                                                }
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                varName[j] = '\0';
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_double)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", @1.first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            default:
+                                                            printf("line %d: Symbol not recognized by %% \n", @1.first_line);
+                                                            errors++;
+                                                            break;
+                                                        }
+                                                        j=0;
+                                                        p++;
+                                                        continue;
 
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 printf("%d",(int)getVar(varName)->value);
-                                                //             break;
-                                                //             case 'f':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 printf("%f", (float)getVar(varName)->value);
-                                                //                 break;
-                                                //             case 'l':
-                                                //                 i++;
-                                                //                 if(buffer[i] != 'f')
-                                                //                 {
-                                                //                     errors++;
-                                                //                     printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //                     break;
-                                                //                 }
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 printf("%lf", getVar(varName)->value);
-                                                //                 break;
-                                                //             default:
-                                                //             printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //             errors++;
-                                                //             break;
-                                                //         }
-
-
-                                                //         p++;
-                                                //         continue;
-
-                                                //     }
-                                                //     if(buffer[i] == '\\')
-                                                //     {
-                                                //         i++;
-                                                //         handleBackSlashForBuffer(buffer[i]);
-                                                //         continue;
-                                                //     }
-                                                //     printf("%c", buffer[i]);
-                                                // }
+                                                    }
+                                                    if(buffer[i] == '\\')
+                                                    {
+                                                        i++;
+                                                        handleBackSlashForBuffer(buffer[i]);
+                                                        continue;
+                                                    }
+                                                }
                                             }
     | T_SCANF                               {
-                                                genCode(SCANF, $1, 0, 0, @1.first_line);
+                                                genCode(SCANF, strdup($1), 0, 0, @1.first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
-                                                // char buffer[1024];
-                                                // double val=0;
-                                                // char varName[1024] = "";
-                                                // strcpy(buffer, $1 + strlen("scanf(\""));  // eliminare scnaf(" de la inceput
-                                                // char* p = strchr(buffer, '\"');
-                                                // p+=2;                           //eliminare ",
-                                                // int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
-                                                // for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
-                                                // {
-                                                //     if(buffer[i] == '%')
-                                                //     {
-                                                //         while(p[0] == ' ') p++;
-                                                //         i++;
-                                                //         int j = 0;
-                                                //         strcpy(varName, "");
-                                                //         if(p[0] != '&')
-                                                //         {
-                                                //             errors++;
-                                                //             printf("line %d: & not used, could not read value\n", @1.first_line);
-                                                //         }
-                                                //         p++;
-                                                //         varRecord* ptr = NULL;
-                                                //         switch(buffer[i])
-                                                //         {
-                                                //             case 'd':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 scanf("%lf", &val);
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 ptr->value = (int)val;
-                                                //             break;
-                                                //             case 'f':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 scanf("%lf", &val);
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 ptr->value = (float)val;
-                                                //                 break;
-                                                //             case 'l':
-                                                //                 i++;
-                                                //                 if(buffer[i] != 'f')
-                                                //                 {
-                                                //                     errors++;
-                                                //                     printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //                     break;
-                                                //                 }
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 scanf("%lf", &val);
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 ptr->value = (double)val;
-                                                //                 break;
-                                                //             default:
-                                                //             printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //             errors++;
-                                                //             break;
-                                                //         }
-                                                //         p++;
-                                                //         continue;
-                                                //     } else if (buffer[0] == ' ') {continue;}
-                                                //     else
-                                                //     {
-                                                //         errors++;
-                                                //         printf("line %d: Character not recognized by scnaf, please only use %%\n", @1.first_line);
-                                                //     }
-                                                // }
+                                                char buffer[1024];
+                                                double val=0;
+                                                char varName[1024] = "";
+                                                strcpy(buffer, $1 + strlen("scanf(\""));  // eliminare scnaf(" de la inceput
+                                                char* p = strrchr(buffer, '\"');
+                                                p+=2;                           //eliminare ",
+                                                int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
+                                                for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
+                                                {
+                                                    if(buffer[i] == '%')
+                                                    {
+                                                        while(p[0] == ' ') p++;
+                                                        i++;
+                                                        int j = 0;
+                                                        strcpy(varName, "");
+                                                        if(p[0] != '&')
+                                                        {
+                                                            errors++;
+                                                            printf("line %d: & not used, could not read value\n", @1.first_line);
+                                                        }
+                                                        p++;
+                                                        varRecord* ptr = NULL;
+                                                        switch(buffer[i])
+                                                        {
+                                                            case 'd':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_integer)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", @1.first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                            break;
+                                                            case 'f':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_float)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", @1.first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            case 'l':
+                                                                i++;
+                                                                if(buffer[i] != 'f')
+                                                                {
+                                                                    errors++;
+                                                                    printf("line %d: Symbol not recognized by %% \n", @1.first_line);
+                                                                    break;
+                                                                }
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_double)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", @1.first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            default:
+                                                            printf("line %d: Symbol not recognized by %% \n", @1.first_line);
+                                                            errors++;
+                                                            break;
+                                                        }
+                                                        p++;
+                                                        continue;
+                                                    } else if (buffer[0] == ' ') {continue;}
+                                                    else
+                                                    {
+                                                        errors++;
+                                                        printf("line %d: Character not recognized by scnaf, please only use %%\n", @1.first_line);
+                                                    }
+                                                }
                                                 
                                             }
     
@@ -435,23 +500,23 @@ variable_list:
 variable_declaration:
     T_IDENTIFIER                            { 
                                                 genCode(DECL, $1, currentType, 2, @1.first_line);
-                                                // varRecord* ptr = addVar($1, currentType);  
-                                                // if(ptr == NULL) 
-                                                // {
-                                                //     printf("line %d: Previous declaration of variable %s\n", @1.first_line, $1); 
-                                                //     errors++;
-                                                // }
+                                                varRecord* ptr = addVar($1, currentType);  
+                                                if(ptr == NULL) 
+                                                {
+                                                    printf("line %d: Previous declaration of variable %s\n", @1.first_line, $1); 
+                                                    errors++;
+                                                }
                                             }
     | T_IDENTIFIER '=' expression        {
                                             genCode(DECL, $1, currentType, 2, @1.first_line);
                                             genCode(STORE, $1, 0, 0, @1.first_line);
-                                            // varRecord* ptr = addVar($1, currentType);
-                                            // if(ptr == NULL) 
-                                            // {
-                                            //     printf("line %d: Previous declaration of variable %s\n", @1.first_line, $1); 
-                                            //     errors++;
-                                            //     break;
-                                            // }
+                                            varRecord* ptr = addVar($1, currentType);
+                                            if(ptr == NULL) 
+                                            {
+                                                printf("line %d: Previous declaration of variable %s\n", @1.first_line, $1); 
+                                                errors++;
+                                                break;
+                                            }
                                             // ptr->value = $3;
                                         }
     ;
@@ -459,32 +524,37 @@ variable_declaration:
 variable_load: 
     T_IDENTIFIER '=' expression         {
                                             genCode(STORE, $1, 0, 0, @1.first_line);
-                                            // if (shouldExecute == 0) break; 
-                                            // varRecord* ptr = getVar($1);
-                                            // if(ptr == NULL)
-                                            // {
-                                            //     printf("Line %d: Identifier %s not declared.\n", @1.first_line, $1);
-                                            //     errors++;
-                                            //     break;
-                                            // }
+                                            if (shouldExecute == 0) break; 
+                                            varRecord* ptr = getVar($1);
+                                            if(ptr == NULL)
+                                            {
+                                                printf("Line %d: Identifier %s not declared.\n", @1.first_line, $1);
+                                                errors++;
+                                                break;
+                                            }
                                             // ptr->value = $3;
                                         }
     ;
 
 expression: T_IDENTIFIER                {
-                                            genCode(DATA, $1, 0, 0, @1.first_line);
+                                            
                                             // if (shouldExecute == 0) break;  
-                                            // varRecord* ptr = getVar($1);
-                                            // if(ptr == NULL)
-                                            // {
-                                            //     printf("Line %d: Idendifier %s not declared.\n", @1.first_line, $1);
-                                            //     errors++;
-                                            //     break;
-                                            // }
-                                            // $$ = ptr->value;
+                                            varRecord* ptr = getVar($1);
+                                            if(ptr == NULL)
+                                            {
+                                                printf("Line %d: Idendifier %s not declared.\n", @1.first_line, $1);
+                                                errors++;
+                                                break;
+                                            }
+                                            genCode(DATA, $1, ptr->type, 0, @1.first_line);
+
                                         }
-    | T_DOUBLE_VAL                          {genCode(DATA, "", $1, 1, @1.first_line);}
-    | T_INTEGER_VAL                         {genCode(DATA, "", (double)$1, 1, @1.first_line);}
+    | T_DOUBLE_VAL                          {genCode(DATA, "double", $1, 1, @1.first_line);}
+    | T_INTEGER_VAL                         {genCode(DATA, "int", (double)$1, 1, @1.first_line);}
+    | T_FLOAT_VAL                           {genCode(DATA, "float", (double)$1, 1, @1.first_line);}
+    | T_INT_CAST expression                 {genCode(CAST, varTypeName[t_integer], t_integer, 0, @1.first_line);}
+    | T_FLOAT_CAST expression               {genCode(CAST, varTypeName[t_float], t_float, 0, @1.first_line);}
+    | T_DOUBLE_CAST expression              {genCode(CAST, varTypeName[t_double], t_double, 0, @1.first_line);}
     | expression '+' expression             {genCode(ADD, "", 0, -1, @1.first_line);  $$ = $1 + $3;}
     | expression '-' expression             {genCode(SUB, "", 0, -1, @1.first_line); $$ = $1 - $3;}
     | expression '*' expression             {genCode(MUL, "", 0, -1, @1.first_line);  $$ = $1 * $3;}
@@ -509,6 +579,7 @@ expression: T_IDENTIFIER                {
 
 int main(int argc, char** argv)
 {   
+    currentState = parsing;
     if (argc == 2) {
         yyin = fopen(argv[1], "r");
         if (!yyin) {
@@ -517,6 +588,7 @@ int main(int argc, char** argv)
         }
     }
     yyparse();
+    currentState = executing;
     printf("Parsing ended.\n");
     if(DEBUGGER)
     {
@@ -535,6 +607,7 @@ int main(int argc, char** argv)
         //printf("IfCount= %d\n", ifCount);
         printAllVars();
     }
+    
     return 0;
 }
 

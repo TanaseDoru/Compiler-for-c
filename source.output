@@ -1,3 +1,8 @@
+State 51 conflicts: 10 shift/reduce
+State 52 conflicts: 10 shift/reduce
+State 53 conflicts: 10 shift/reduce
+
+
 Grammar
 
     0 $accept: program $end
@@ -100,165 +105,173 @@ Grammar
    59 expression: T_IDENTIFIER
    60           | T_DOUBLE_VAL
    61           | T_INTEGER_VAL
-   62           | expression '+' expression
-   63           | expression '-' expression
-   64           | expression '*' expression
-   65           | expression '/' expression
-   66           | expression '<' expression
-   67           | expression T_LE expression
-   68           | expression '>' expression
-   69           | expression T_GE expression
-   70           | expression T_EQ expression
-   71           | expression T_NEQ expression
-   72           | '(' expression ')'
-   73           | function_call
+   62           | T_FLOAT_VAL
+   63           | T_INT_CAST expression
+   64           | T_FLOAT_CAST expression
+   65           | T_DOUBLE_CAST expression
+   66           | expression '+' expression
+   67           | expression '-' expression
+   68           | expression '*' expression
+   69           | expression '/' expression
+   70           | expression '<' expression
+   71           | expression T_LE expression
+   72           | expression '>' expression
+   73           | expression T_GE expression
+   74           | expression T_EQ expression
+   75           | expression T_NEQ expression
+   76           | '(' expression ')'
+   77           | function_call
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 9 13 19 30 35 72
-    ')' (41) 9 13 19 30 35 72
-    '*' (42) 64
-    '+' (43) 62
+    '(' (40) 9 13 19 30 35 76
+    ')' (41) 9 13 19 30 35 76
+    '*' (42) 68
+    '+' (43) 66
     ',' (44) 17 23 55
-    '-' (45) 63
-    '/' (47) 65
+    '-' (45) 67
+    '/' (47) 69
     ';' (59) 25
-    '<' (60) 66
+    '<' (60) 70
     '=' (61) 57 58
-    '>' (62) 68
+    '>' (62) 72
     '{' (123) 9 13 30 35 38
     '}' (125) 9 13 30 35 38
     error (256)
-    T_EQ (258) 70
-    T_LE (259) 67
-    T_GE (260) 69
-    T_NEQ (261) 71
+    T_EQ (258) 74
+    T_LE (259) 71
+    T_GE (260) 73
+    T_NEQ (261) 75
     T_INT_KW (262) 51
     T_FLOAT_KW (263) 53
     T_DOUBLE_KW (264) 52
-    T_IF_KW <lbVal> (265) 30
-    T_WHILE_KW <lbVal> (266) 35
-    T_ELSE_KW (267) 30
-    T_VOID_KW (268) 9
-    T_RETURN (269) 42
-    T_COMM (270) 40
-    T_ERROR (271) 3
-    T_PRINTF_PARAM <str> (272) 46
-    T_PRINTF_SIMPLE <str> (273) 45
-    T_SCANF <str> (274) 47
-    T_INTEGER_VAL <intval> (275) 61
-    T_IDENTIFIER <str> (276) 9 13 15 17 19 56 57 58 59
-    T_DOUBLE_VAL <dval> (277) 60
+    T_INT_CAST (265) 63
+    T_FLOAT_CAST (266) 64
+    T_DOUBLE_CAST (267) 65
+    T_IF_KW <lbVal> (268) 30
+    T_WHILE_KW <lbVal> (269) 35
+    T_ELSE_KW (270) 30
+    T_VOID_KW (271) 9
+    T_RETURN (272) 42
+    T_COMM (273) 40
+    T_ERROR (274) 3
+    T_PRINTF_PARAM <str> (275) 46
+    T_PRINTF_SIMPLE <str> (276) 45
+    T_SCANF <str> (277) 47
+    T_INTEGER_VAL <intval> (278) 61
+    T_IDENTIFIER <str> (279) 9 13 15 17 19 56 57 58 59
+    T_DOUBLE_VAL <dval> (280) 60
+    T_FLOAT_VAL <fval> (281) 62
 
 
 Nonterminals, with rules where they appear
 
-    $accept (36)
+    $accept (40)
         on left: 0
-    program (37)
+    program (41)
         on left: 1 2 3
         on right: 0
-    functions (38)
+    functions (42)
         on left: 4 5
         on right: 1 5
-    function_declaration (39)
+    function_declaration (43)
         on left: 9 13
         on right: 1 5
-    $@1 (40)
+    $@1 (44)
         on left: 6
         on right: 9
-    $@2 (41)
+    $@2 (45)
         on left: 7
         on right: 9
-    $@3 (42)
+    $@3 (46)
         on left: 8
         on right: 9
-    $@4 (43)
+    $@4 (47)
         on left: 10
         on right: 13
-    $@5 (44)
+    $@5 (48)
         on left: 11
         on right: 13
-    $@6 (45)
+    $@6 (49)
         on left: 12
         on right: 13
-    parameter_list (46)
+    parameter_list (50)
         on left: 14 15
         on right: 9 13
-    parameter_list_tail (47)
+    parameter_list_tail (51)
         on left: 16 17
         on right: 15 17
-    midrule_lbs <lbVal> (48)
+    midrule_lbs <lbVal> (52)
         on left: 18
         on right: 19
-    function_call (49)
+    function_call (53)
         on left: 19
-        on right: 41 73
-    argument_list (50)
+        on right: 41 77
+    argument_list (54)
         on left: 20 21
         on right: 19
-    argument_list_tail (51)
+    argument_list_tail (55)
         on left: 22 23
         on right: 21 23
-    instructions (52)
+    instructions (56)
         on left: 24 25 30 35 38
         on right: 2 9 13 25 30 35 38
-    $@7 (53)
+    $@7 (57)
         on left: 26
         on right: 30
-    $@8 (54)
+    $@8 (58)
         on left: 27
         on right: 30
-    $@9 (55)
+    $@9 (59)
         on left: 28
         on right: 30
-    $@10 (56)
+    $@10 (60)
         on left: 29
         on right: 30
-    $@11 (57)
+    $@11 (61)
         on left: 31
         on right: 35
-    $@12 (58)
+    $@12 (62)
         on left: 32
         on right: 35
-    $@13 (59)
+    $@13 (63)
         on left: 33
         on right: 35
-    $@14 (60)
+    $@14 (64)
         on left: 34
         on right: 35
-    $@15 (61)
+    $@15 (65)
         on left: 36
         on right: 38
-    $@16 (62)
+    $@16 (66)
         on left: 37
         on right: 38
-    instruction (63)
+    instruction (67)
         on left: 39 40 41 42 43 44 45 46 47
         on right: 25
-    declarations (64)
+    declarations (68)
         on left: 48 49
         on right: 43 49
-    declaration (65)
+    declaration (69)
         on left: 50
         on right: 48 49
-    type (66)
+    type (70)
         on left: 51 52 53
         on right: 13 15 17 50
-    variable_list (67)
+    variable_list (71)
         on left: 54 55
         on right: 50 55
-    variable_declaration (68)
+    variable_declaration (72)
         on left: 56 57
         on right: 54 55
-    variable_load (69)
+    variable_load (73)
         on left: 58
         on right: 44
-    expression <dval> (70)
-        on left: 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73
-        on right: 21 23 30 35 42 57 58 62 63 64 65 66 67 68 69 70 71 72
+    expression <dval> (74)
+        on left: 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77
+        on right: 21 23 30 35 42 57 58 63 64 65 66 67 68 69 70 71 72 73 74 75 76
 
 
 State 0
@@ -342,13 +355,17 @@ State 7
 
    42 instruction: T_RETURN • expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
-    expression     go to state 32
+    function_call  go to state 35
+    expression     go to state 36
 
 
 State 8
@@ -391,11 +408,11 @@ State 13
    19 function_call: T_IDENTIFIER • midrule_lbs '(' argument_list ')'
    58 variable_load: T_IDENTIFIER • '=' expression
 
-    '='  shift, and go to state 33
+    '='  shift, and go to state 37
 
     $default  reduce using rule 18 (midrule_lbs)
 
-    midrule_lbs  go to state 34
+    midrule_lbs  go to state 38
 
 
 State 14
@@ -404,14 +421,14 @@ State 14
 
     $default  reduce using rule 36 ($@15)
 
-    $@15  go to state 35
+    $@15  go to state 39
 
 
 State 15
 
     0 $accept: program • $end
 
-    $end  shift, and go to state 36
+    $end  shift, and go to state 40
 
 
 State 16
@@ -420,7 +437,7 @@ State 16
 
     $default  reduce using rule 4 (functions)
 
-    functions  go to state 37
+    functions  go to state 41
 
 
 State 17
@@ -441,7 +458,7 @@ State 19
 
    25 instructions: instruction • ';' instructions
 
-    ';'  shift, and go to state 38
+    ';'  shift, and go to state 42
 
 
 State 20
@@ -462,9 +479,9 @@ State 21
 
     $default  reduce using rule 48 (declarations)
 
-    declarations  go to state 39
+    declarations  go to state 43
     declaration   go to state 21
-    type          go to state 40
+    type          go to state 44
 
 
 State 22
@@ -472,10 +489,10 @@ State 22
    13 function_declaration: type • T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'
    50 declaration: type • variable_list
 
-    T_IDENTIFIER  shift, and go to state 41
+    T_IDENTIFIER  shift, and go to state 45
 
-    variable_list         go to state 42
-    variable_declaration  go to state 43
+    variable_list         go to state 46
+    variable_declaration  go to state 47
 
 
 State 23
@@ -489,20 +506,24 @@ State 24
 
    30 instructions: T_IF_KW '(' • expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
-    expression     go to state 44
+    function_call  go to state 35
+    expression     go to state 48
 
 
 State 25
 
    35 instructions: T_WHILE_KW $@11 • '(' expression ')' $@12 '{' $@13 instructions '}' $@14 instructions
 
-    '('  shift, and go to state 45
+    '('  shift, and go to state 49
 
 
 State 26
@@ -511,17 +532,68 @@ State 26
 
     $default  reduce using rule 6 ($@1)
 
-    $@1  go to state 46
+    $@1  go to state 50
 
 
 State 27
+
+   63 expression: T_INT_CAST • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 51
+
+
+State 28
+
+   64 expression: T_FLOAT_CAST • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 52
+
+
+State 29
+
+   65 expression: T_DOUBLE_CAST • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 53
+
+
+State 30
 
    61 expression: T_INTEGER_VAL •
 
     $default  reduce using rule 61 (expression)
 
 
-State 28
+State 31
 
    19 function_call: T_IDENTIFIER • midrule_lbs '(' argument_list ')'
    59 expression: T_IDENTIFIER •
@@ -529,85 +601,100 @@ State 28
     '('       reduce using rule 18 (midrule_lbs)
     $default  reduce using rule 59 (expression)
 
-    midrule_lbs  go to state 34
+    midrule_lbs  go to state 38
 
 
-State 29
+State 32
 
    60 expression: T_DOUBLE_VAL •
 
     $default  reduce using rule 60 (expression)
 
 
-State 30
-
-   72 expression: '(' • expression ')'
-
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
-
-    function_call  go to state 31
-    expression     go to state 47
-
-
-State 31
-
-   73 expression: function_call •
-
-    $default  reduce using rule 73 (expression)
-
-
-State 32
-
-   42 instruction: T_RETURN expression •
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
-
-    $default  reduce using rule 42 (instruction)
-
-
 State 33
 
-   58 variable_load: T_IDENTIFIER '=' • expression
+   62 expression: T_FLOAT_VAL •
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
-
-    function_call  go to state 31
-    expression     go to state 58
+    $default  reduce using rule 62 (expression)
 
 
 State 34
 
-   19 function_call: T_IDENTIFIER midrule_lbs • '(' argument_list ')'
+   76 expression: '(' • expression ')'
 
-    '('  shift, and go to state 59
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 54
 
 
 State 35
+
+   77 expression: function_call •
+
+    $default  reduce using rule 77 (expression)
+
+
+State 36
+
+   42 instruction: T_RETURN expression •
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+
+    $default  reduce using rule 42 (instruction)
+
+
+State 37
+
+   58 variable_load: T_IDENTIFIER '=' • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 65
+
+
+State 38
+
+   19 function_call: T_IDENTIFIER midrule_lbs • '(' argument_list ')'
+
+    '('  shift, and go to state 66
+
+
+State 39
 
    38 instructions: '{' $@15 • instructions '}' $@16 instructions
 
@@ -628,22 +715,22 @@ State 35
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 60
+    instructions   go to state 67
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 36
+State 40
 
     0 $accept: program $end •
 
     $default  accept
 
 
-State 37
+State 41
 
     1 program: function_declaration functions •
     5 functions: functions • function_declaration
@@ -655,11 +742,11 @@ State 37
 
     $default  reduce using rule 1 (program)
 
-    function_declaration  go to state 61
-    type                  go to state 62
+    function_declaration  go to state 68
+    type                  go to state 69
 
 
-State 38
+State 42
 
    25 instructions: instruction ';' • instructions
 
@@ -680,741 +767,907 @@ State 38
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 63
+    instructions   go to state 70
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 39
+State 43
 
    49 declarations: declaration declarations •
 
     $default  reduce using rule 49 (declarations)
 
 
-State 40
+State 44
 
    50 declaration: type • variable_list
 
-    T_IDENTIFIER  shift, and go to state 64
+    T_IDENTIFIER  shift, and go to state 71
 
-    variable_list         go to state 42
-    variable_declaration  go to state 43
+    variable_list         go to state 46
+    variable_declaration  go to state 47
 
 
-State 41
+State 45
 
    13 function_declaration: type T_IDENTIFIER • $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'
    56 variable_declaration: T_IDENTIFIER •
    57                     | T_IDENTIFIER • '=' expression
 
-    '='  shift, and go to state 65
+    '='  shift, and go to state 72
 
     '('       reduce using rule 10 ($@4)
     $default  reduce using rule 56 (variable_declaration)
 
-    $@4  go to state 66
+    $@4  go to state 73
 
 
-State 42
+State 46
 
    50 declaration: type variable_list •
 
     $default  reduce using rule 50 (declaration)
 
 
-State 43
+State 47
 
    54 variable_list: variable_declaration •
    55              | variable_declaration • ',' variable_list
 
-    ','  shift, and go to state 67
+    ','  shift, and go to state 74
 
     $default  reduce using rule 54 (variable_list)
 
 
-State 44
-
-   30 instructions: T_IF_KW '(' expression • ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
-    ')'    shift, and go to state 68
-
-
-State 45
-
-   35 instructions: T_WHILE_KW $@11 '(' • expression ')' $@12 '{' $@13 instructions '}' $@14 instructions
-
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
-
-    function_call  go to state 31
-    expression     go to state 69
-
-
-State 46
-
-    9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 • '(' $@2 parameter_list ')' '{' $@3 instructions '}'
-
-    '('  shift, and go to state 70
-
-
-State 47
-
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-   72           | '(' expression • ')'
-
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
-    ')'    shift, and go to state 71
-
-
 State 48
 
-   70 expression: expression T_EQ • expression
+   30 instructions: T_IF_KW '(' expression • ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
-
-    function_call  go to state 31
-    expression     go to state 72
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+    ')'    shift, and go to state 75
 
 
 State 49
 
-   67 expression: expression T_LE • expression
+   35 instructions: T_WHILE_KW $@11 '(' • expression ')' $@12 '{' $@13 instructions '}' $@14 instructions
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
-    expression     go to state 73
+    function_call  go to state 35
+    expression     go to state 76
 
 
 State 50
 
-   69 expression: expression T_GE • expression
+    9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 • '(' $@2 parameter_list ')' '{' $@3 instructions '}'
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
-
-    function_call  go to state 31
-    expression     go to state 74
+    '('  shift, and go to state 77
 
 
 State 51
 
-   71 expression: expression T_NEQ • expression
+   63 expression: T_INT_CAST expression •
+   66           | expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
 
-    function_call  go to state 31
-    expression     go to state 75
+    T_EQ      [reduce using rule 63 (expression)]
+    T_LE      [reduce using rule 63 (expression)]
+    T_GE      [reduce using rule 63 (expression)]
+    T_NEQ     [reduce using rule 63 (expression)]
+    '+'       [reduce using rule 63 (expression)]
+    '-'       [reduce using rule 63 (expression)]
+    '>'       [reduce using rule 63 (expression)]
+    '<'       [reduce using rule 63 (expression)]
+    '*'       [reduce using rule 63 (expression)]
+    '/'       [reduce using rule 63 (expression)]
+    $default  reduce using rule 63 (expression)
 
 
 State 52
 
-   62 expression: expression '+' • expression
+   64 expression: T_FLOAT_CAST expression •
+   66           | expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
 
-    function_call  go to state 31
-    expression     go to state 76
+    T_EQ      [reduce using rule 64 (expression)]
+    T_LE      [reduce using rule 64 (expression)]
+    T_GE      [reduce using rule 64 (expression)]
+    T_NEQ     [reduce using rule 64 (expression)]
+    '+'       [reduce using rule 64 (expression)]
+    '-'       [reduce using rule 64 (expression)]
+    '>'       [reduce using rule 64 (expression)]
+    '<'       [reduce using rule 64 (expression)]
+    '*'       [reduce using rule 64 (expression)]
+    '/'       [reduce using rule 64 (expression)]
+    $default  reduce using rule 64 (expression)
 
 
 State 53
 
-   63 expression: expression '-' • expression
+   65 expression: T_DOUBLE_CAST expression •
+   66           | expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
 
-    function_call  go to state 31
-    expression     go to state 77
+    T_EQ      [reduce using rule 65 (expression)]
+    T_LE      [reduce using rule 65 (expression)]
+    T_GE      [reduce using rule 65 (expression)]
+    T_NEQ     [reduce using rule 65 (expression)]
+    '+'       [reduce using rule 65 (expression)]
+    '-'       [reduce using rule 65 (expression)]
+    '>'       [reduce using rule 65 (expression)]
+    '<'       [reduce using rule 65 (expression)]
+    '*'       [reduce using rule 65 (expression)]
+    '/'       [reduce using rule 65 (expression)]
+    $default  reduce using rule 65 (expression)
 
 
 State 54
 
-   68 expression: expression '>' • expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+   76           | '(' expression • ')'
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
-
-    function_call  go to state 31
-    expression     go to state 78
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+    ')'    shift, and go to state 78
 
 
 State 55
 
-   66 expression: expression '<' • expression
+   74 expression: expression T_EQ • expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
+    function_call  go to state 35
     expression     go to state 79
 
 
 State 56
 
-   64 expression: expression '*' • expression
+   71 expression: expression T_LE • expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
+    function_call  go to state 35
     expression     go to state 80
 
 
 State 57
 
-   65 expression: expression '/' • expression
+   73 expression: expression T_GE • expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
+    function_call  go to state 35
     expression     go to state 81
 
 
 State 58
 
-   58 variable_load: T_IDENTIFIER '=' expression •
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   75 expression: expression T_NEQ • expression
 
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    $default  reduce using rule 58 (variable_load)
+    function_call  go to state 35
+    expression     go to state 82
 
 
 State 59
 
-   19 function_call: T_IDENTIFIER midrule_lbs '(' • argument_list ')'
+   66 expression: expression '+' • expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    $default  reduce using rule 20 (argument_list)
-
-    function_call  go to state 31
-    argument_list  go to state 82
+    function_call  go to state 35
     expression     go to state 83
 
 
 State 60
 
-   38 instructions: '{' $@15 instructions • '}' $@16 instructions
+   67 expression: expression '-' • expression
 
-    '}'  shift, and go to state 84
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 84
 
 
 State 61
+
+   72 expression: expression '>' • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 85
+
+
+State 62
+
+   70 expression: expression '<' • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 86
+
+
+State 63
+
+   68 expression: expression '*' • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 87
+
+
+State 64
+
+   69 expression: expression '/' • expression
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    function_call  go to state 35
+    expression     go to state 88
+
+
+State 65
+
+   58 variable_load: T_IDENTIFIER '=' expression •
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+
+    $default  reduce using rule 58 (variable_load)
+
+
+State 66
+
+   19 function_call: T_IDENTIFIER midrule_lbs '(' • argument_list ')'
+
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
+
+    $default  reduce using rule 20 (argument_list)
+
+    function_call  go to state 35
+    argument_list  go to state 89
+    expression     go to state 90
+
+
+State 67
+
+   38 instructions: '{' $@15 instructions • '}' $@16 instructions
+
+    '}'  shift, and go to state 91
+
+
+State 68
 
     5 functions: functions function_declaration •
 
     $default  reduce using rule 5 (functions)
 
 
-State 62
+State 69
 
    13 function_declaration: type • T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'
 
-    T_IDENTIFIER  shift, and go to state 85
+    T_IDENTIFIER  shift, and go to state 92
 
 
-State 63
+State 70
 
    25 instructions: instruction ';' instructions •
 
     $default  reduce using rule 25 (instructions)
 
 
-State 64
+State 71
 
    56 variable_declaration: T_IDENTIFIER •
    57                     | T_IDENTIFIER • '=' expression
 
-    '='  shift, and go to state 65
+    '='  shift, and go to state 72
 
     $default  reduce using rule 56 (variable_declaration)
 
 
-State 65
+State 72
 
    57 variable_declaration: T_IDENTIFIER '=' • expression
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
-    expression     go to state 86
+    function_call  go to state 35
+    expression     go to state 93
 
 
-State 66
+State 73
 
    13 function_declaration: type T_IDENTIFIER $@4 • '(' $@5 parameter_list ')' '{' $@6 instructions '}'
 
-    '('  shift, and go to state 87
+    '('  shift, and go to state 94
 
 
-State 67
+State 74
 
    55 variable_list: variable_declaration ',' • variable_list
 
-    T_IDENTIFIER  shift, and go to state 64
+    T_IDENTIFIER  shift, and go to state 71
 
-    variable_list         go to state 88
-    variable_declaration  go to state 43
+    variable_list         go to state 95
+    variable_declaration  go to state 47
 
 
-State 68
+State 75
 
    30 instructions: T_IF_KW '(' expression ')' • $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
     $default  reduce using rule 26 ($@7)
 
-    $@7  go to state 89
+    $@7  go to state 96
 
 
-State 69
+State 76
 
    35 instructions: T_WHILE_KW $@11 '(' expression • ')' $@12 '{' $@13 instructions '}' $@14 instructions
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
-    ')'    shift, and go to state 90
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+    ')'    shift, and go to state 97
 
 
-State 70
+State 77
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' • $@2 parameter_list ')' '{' $@3 instructions '}'
 
     $default  reduce using rule 7 ($@2)
 
-    $@2  go to state 91
-
-
-State 71
-
-   72 expression: '(' expression ')' •
-
-    $default  reduce using rule 72 (expression)
-
-
-State 72
-
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   70           | expression T_EQ expression •
-   71           | expression • T_NEQ expression
-
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 70 (expression)
-
-
-State 73
-
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   67           | expression T_LE expression •
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 67 (expression)
-
-
-State 74
-
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   69           | expression T_GE expression •
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 69 (expression)
-
-
-State 75
-
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-   71           | expression T_NEQ expression •
-
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 71 (expression)
-
-
-State 76
-
-   62 expression: expression • '+' expression
-   62           | expression '+' expression •
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 62 (expression)
-
-
-State 77
-
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   63           | expression '-' expression •
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
-
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 63 (expression)
+    $@2  go to state 98
 
 
 State 78
 
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   68           | expression '>' expression •
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   76 expression: '(' expression ')' •
 
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
-
-    $default  reduce using rule 68 (expression)
+    $default  reduce using rule 76 (expression)
 
 
 State 79
 
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   66           | expression '<' expression •
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   74           | expression T_EQ expression •
+   75           | expression • T_NEQ expression
 
-    '*'  shift, and go to state 56
-    '/'  shift, and go to state 57
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
 
-    $default  reduce using rule 66 (expression)
+    $default  reduce using rule 74 (expression)
 
 
 State 80
 
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   64           | expression '*' expression •
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   71           | expression T_LE expression •
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    $default  reduce using rule 64 (expression)
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
+
+    $default  reduce using rule 71 (expression)
 
 
 State 81
 
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   65           | expression '/' expression •
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   73           | expression T_GE expression •
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    $default  reduce using rule 65 (expression)
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
+
+    $default  reduce using rule 73 (expression)
 
 
 State 82
 
-   19 function_call: T_IDENTIFIER midrule_lbs '(' argument_list • ')'
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+   75           | expression T_NEQ expression •
 
-    ')'  shift, and go to state 92
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
+
+    $default  reduce using rule 75 (expression)
 
 
 State 83
 
-   21 argument_list: expression • argument_list_tail
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   66           | expression '+' expression •
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
-    ','    shift, and go to state 93
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
 
-    $default  reduce using rule 22 (argument_list_tail)
-
-    argument_list_tail  go to state 94
+    $default  reduce using rule 66 (expression)
 
 
 State 84
+
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   67           | expression '-' expression •
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
+
+    $default  reduce using rule 67 (expression)
+
+
+State 85
+
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   72           | expression '>' expression •
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
+
+    $default  reduce using rule 72 (expression)
+
+
+State 86
+
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   70           | expression '<' expression •
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    '*'  shift, and go to state 63
+    '/'  shift, and go to state 64
+
+    $default  reduce using rule 70 (expression)
+
+
+State 87
+
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   68           | expression '*' expression •
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    $default  reduce using rule 68 (expression)
+
+
+State 88
+
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   69           | expression '/' expression •
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    $default  reduce using rule 69 (expression)
+
+
+State 89
+
+   19 function_call: T_IDENTIFIER midrule_lbs '(' argument_list • ')'
+
+    ')'  shift, and go to state 99
+
+
+State 90
+
+   21 argument_list: expression • argument_list_tail
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
+
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+    ','    shift, and go to state 100
+
+    $default  reduce using rule 22 (argument_list_tail)
+
+    argument_list_tail  go to state 101
+
+
+State 91
 
    38 instructions: '{' $@15 instructions '}' • $@16 instructions
 
     $default  reduce using rule 37 ($@16)
 
-    $@16  go to state 95
+    $@16  go to state 102
 
 
-State 85
+State 92
 
    13 function_declaration: type T_IDENTIFIER • $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'
 
     $default  reduce using rule 10 ($@4)
 
-    $@4  go to state 66
+    $@4  go to state 73
 
 
-State 86
+State 93
 
    57 variable_declaration: T_IDENTIFIER '=' expression •
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
 
     $default  reduce using rule 57 (variable_declaration)
 
 
-State 87
+State 94
 
    13 function_declaration: type T_IDENTIFIER $@4 '(' • $@5 parameter_list ')' '{' $@6 instructions '}'
 
     $default  reduce using rule 11 ($@5)
 
-    $@5  go to state 96
+    $@5  go to state 103
 
 
-State 88
+State 95
 
    55 variable_list: variable_declaration ',' variable_list •
 
     $default  reduce using rule 55 (variable_list)
 
 
-State 89
+State 96
 
    30 instructions: T_IF_KW '(' expression ')' $@7 • '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
-    '{'  shift, and go to state 97
+    '{'  shift, and go to state 104
 
 
-State 90
+State 97
 
    35 instructions: T_WHILE_KW $@11 '(' expression ')' • $@12 '{' $@13 instructions '}' $@14 instructions
 
     $default  reduce using rule 32 ($@12)
 
-    $@12  go to state 98
+    $@12  go to state 105
 
 
-State 91
+State 98
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 • parameter_list ')' '{' $@3 instructions '}'
 
@@ -1424,38 +1677,42 @@ State 91
 
     $default  reduce using rule 14 (parameter_list)
 
-    parameter_list  go to state 99
-    type            go to state 100
+    parameter_list  go to state 106
+    type            go to state 107
 
 
-State 92
+State 99
 
    19 function_call: T_IDENTIFIER midrule_lbs '(' argument_list ')' •
 
     $default  reduce using rule 19 (function_call)
 
 
-State 93
+State 100
 
    23 argument_list_tail: ',' • expression argument_list_tail
 
-    T_INTEGER_VAL  shift, and go to state 27
-    T_IDENTIFIER   shift, and go to state 28
-    T_DOUBLE_VAL   shift, and go to state 29
-    '('            shift, and go to state 30
+    T_INT_CAST     shift, and go to state 27
+    T_FLOAT_CAST   shift, and go to state 28
+    T_DOUBLE_CAST  shift, and go to state 29
+    T_INTEGER_VAL  shift, and go to state 30
+    T_IDENTIFIER   shift, and go to state 31
+    T_DOUBLE_VAL   shift, and go to state 32
+    T_FLOAT_VAL    shift, and go to state 33
+    '('            shift, and go to state 34
 
-    function_call  go to state 31
-    expression     go to state 101
+    function_call  go to state 35
+    expression     go to state 108
 
 
-State 94
+State 101
 
    21 argument_list: expression argument_list_tail •
 
     $default  reduce using rule 21 (argument_list)
 
 
-State 95
+State 102
 
    38 instructions: '{' $@15 instructions '}' $@16 • instructions
 
@@ -1476,15 +1733,15 @@ State 95
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 102
+    instructions   go to state 109
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 96
+State 103
 
    13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 • parameter_list ')' '{' $@6 instructions '}'
 
@@ -1494,11 +1751,11 @@ State 96
 
     $default  reduce using rule 14 (parameter_list)
 
-    parameter_list  go to state 103
-    type            go to state 100
+    parameter_list  go to state 110
+    type            go to state 107
 
 
-State 97
+State 104
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' • instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
@@ -1519,138 +1776,138 @@ State 97
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 104
+    instructions   go to state 111
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 98
+State 105
 
    35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 • '{' $@13 instructions '}' $@14 instructions
 
-    '{'  shift, and go to state 105
+    '{'  shift, and go to state 112
 
 
-State 99
+State 106
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list • ')' '{' $@3 instructions '}'
 
-    ')'  shift, and go to state 106
+    ')'  shift, and go to state 113
 
 
-State 100
+State 107
 
    15 parameter_list: type • T_IDENTIFIER parameter_list_tail
 
-    T_IDENTIFIER  shift, and go to state 107
+    T_IDENTIFIER  shift, and go to state 114
 
 
-State 101
+State 108
 
    23 argument_list_tail: ',' expression • argument_list_tail
-   62 expression: expression • '+' expression
-   63           | expression • '-' expression
-   64           | expression • '*' expression
-   65           | expression • '/' expression
-   66           | expression • '<' expression
-   67           | expression • T_LE expression
-   68           | expression • '>' expression
-   69           | expression • T_GE expression
-   70           | expression • T_EQ expression
-   71           | expression • T_NEQ expression
+   66 expression: expression • '+' expression
+   67           | expression • '-' expression
+   68           | expression • '*' expression
+   69           | expression • '/' expression
+   70           | expression • '<' expression
+   71           | expression • T_LE expression
+   72           | expression • '>' expression
+   73           | expression • T_GE expression
+   74           | expression • T_EQ expression
+   75           | expression • T_NEQ expression
 
-    T_EQ   shift, and go to state 48
-    T_LE   shift, and go to state 49
-    T_GE   shift, and go to state 50
-    T_NEQ  shift, and go to state 51
-    '+'    shift, and go to state 52
-    '-'    shift, and go to state 53
-    '>'    shift, and go to state 54
-    '<'    shift, and go to state 55
-    '*'    shift, and go to state 56
-    '/'    shift, and go to state 57
-    ','    shift, and go to state 93
+    T_EQ   shift, and go to state 55
+    T_LE   shift, and go to state 56
+    T_GE   shift, and go to state 57
+    T_NEQ  shift, and go to state 58
+    '+'    shift, and go to state 59
+    '-'    shift, and go to state 60
+    '>'    shift, and go to state 61
+    '<'    shift, and go to state 62
+    '*'    shift, and go to state 63
+    '/'    shift, and go to state 64
+    ','    shift, and go to state 100
 
     $default  reduce using rule 22 (argument_list_tail)
 
-    argument_list_tail  go to state 108
+    argument_list_tail  go to state 115
 
 
-State 102
+State 109
 
    38 instructions: '{' $@15 instructions '}' $@16 instructions •
 
     $default  reduce using rule 38 (instructions)
 
 
-State 103
+State 110
 
    13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list • ')' '{' $@6 instructions '}'
 
-    ')'  shift, and go to state 109
+    ')'  shift, and go to state 116
 
 
-State 104
+State 111
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions • '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
-    '}'  shift, and go to state 110
+    '}'  shift, and go to state 117
 
 
-State 105
+State 112
 
    35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' • $@13 instructions '}' $@14 instructions
 
     $default  reduce using rule 33 ($@13)
 
-    $@13  go to state 111
+    $@13  go to state 118
 
 
-State 106
+State 113
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' • '{' $@3 instructions '}'
 
-    '{'  shift, and go to state 112
+    '{'  shift, and go to state 119
 
 
-State 107
+State 114
 
    15 parameter_list: type T_IDENTIFIER • parameter_list_tail
 
-    ','  shift, and go to state 113
+    ','  shift, and go to state 120
 
     $default  reduce using rule 16 (parameter_list_tail)
 
-    parameter_list_tail  go to state 114
+    parameter_list_tail  go to state 121
 
 
-State 108
+State 115
 
    23 argument_list_tail: ',' expression argument_list_tail •
 
     $default  reduce using rule 23 (argument_list_tail)
 
 
-State 109
+State 116
 
    13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' • '{' $@6 instructions '}'
 
-    '{'  shift, and go to state 115
+    '{'  shift, and go to state 122
 
 
-State 110
+State 117
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' • $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
     $default  reduce using rule 27 ($@8)
 
-    $@8  go to state 116
+    $@8  go to state 123
 
 
-State 111
+State 118
 
    35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 • instructions '}' $@14 instructions
 
@@ -1671,24 +1928,24 @@ State 111
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 117
+    instructions   go to state 124
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 112
+State 119
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' • $@3 instructions '}'
 
     $default  reduce using rule 8 ($@3)
 
-    $@3  go to state 118
+    $@3  go to state 125
 
 
-State 113
+State 120
 
    17 parameter_list_tail: ',' • type T_IDENTIFIER parameter_list_tail
 
@@ -1696,40 +1953,40 @@ State 113
     T_FLOAT_KW   shift, and go to state 2
     T_DOUBLE_KW  shift, and go to state 3
 
-    type  go to state 119
+    type  go to state 126
 
 
-State 114
+State 121
 
    15 parameter_list: type T_IDENTIFIER parameter_list_tail •
 
     $default  reduce using rule 15 (parameter_list)
 
 
-State 115
+State 122
 
    13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' • $@6 instructions '}'
 
     $default  reduce using rule 12 ($@6)
 
-    $@6  go to state 120
+    $@6  go to state 127
 
 
-State 116
+State 123
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 • T_ELSE_KW $@9 '{' instructions '}' $@10 instructions
 
-    T_ELSE_KW  shift, and go to state 121
+    T_ELSE_KW  shift, and go to state 128
 
 
-State 117
+State 124
 
    35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 instructions • '}' $@14 instructions
 
-    '}'  shift, and go to state 122
+    '}'  shift, and go to state 129
 
 
-State 118
+State 125
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' $@3 • instructions '}'
 
@@ -1750,103 +2007,24 @@ State 118
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 123
+    instructions   go to state 130
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
-
-
-State 119
-
-   17 parameter_list_tail: ',' type • T_IDENTIFIER parameter_list_tail
-
-    T_IDENTIFIER  shift, and go to state 124
-
-
-State 120
-
-   13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 • instructions '}'
-
-    T_INT_KW         shift, and go to state 1
-    T_FLOAT_KW       shift, and go to state 2
-    T_DOUBLE_KW      shift, and go to state 3
-    T_IF_KW          shift, and go to state 4
-    T_WHILE_KW       shift, and go to state 5
-    T_RETURN         shift, and go to state 7
-    T_COMM           shift, and go to state 8
-    T_PRINTF_PARAM   shift, and go to state 10
-    T_PRINTF_SIMPLE  shift, and go to state 11
-    T_SCANF          shift, and go to state 12
-    T_IDENTIFIER     shift, and go to state 13
-    '{'              shift, and go to state 14
-
-    ';'       reduce using rule 39 (instruction)
-    $default  reduce using rule 24 (instructions)
-
-    function_call  go to state 17
-    instructions   go to state 125
-    instruction    go to state 19
-    declarations   go to state 20
-    declaration    go to state 21
-    type           go to state 40
-    variable_load  go to state 23
-
-
-State 121
-
-   30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW • $@9 '{' instructions '}' $@10 instructions
-
-    $default  reduce using rule 28 ($@9)
-
-    $@9  go to state 126
-
-
-State 122
-
-   35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 instructions '}' • $@14 instructions
-
-    $default  reduce using rule 34 ($@14)
-
-    $@14  go to state 127
-
-
-State 123
-
-    9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' $@3 instructions • '}'
-
-    '}'  shift, and go to state 128
-
-
-State 124
-
-   17 parameter_list_tail: ',' type T_IDENTIFIER • parameter_list_tail
-
-    ','  shift, and go to state 113
-
-    $default  reduce using rule 16 (parameter_list_tail)
-
-    parameter_list_tail  go to state 129
-
-
-State 125
-
-   13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions • '}'
-
-    '}'  shift, and go to state 130
 
 
 State 126
 
-   30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 • '{' instructions '}' $@10 instructions
+   17 parameter_list_tail: ',' type • T_IDENTIFIER parameter_list_tail
 
-    '{'  shift, and go to state 131
+    T_IDENTIFIER  shift, and go to state 131
 
 
 State 127
 
-   35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 instructions '}' $@14 • instructions
+   13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 • instructions '}'
 
     T_INT_KW         shift, and go to state 1
     T_FLOAT_KW       shift, and go to state 2
@@ -1869,32 +2047,111 @@ State 127
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
 State 128
+
+   30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW • $@9 '{' instructions '}' $@10 instructions
+
+    $default  reduce using rule 28 ($@9)
+
+    $@9  go to state 133
+
+
+State 129
+
+   35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 instructions '}' • $@14 instructions
+
+    $default  reduce using rule 34 ($@14)
+
+    $@14  go to state 134
+
+
+State 130
+
+    9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' $@3 instructions • '}'
+
+    '}'  shift, and go to state 135
+
+
+State 131
+
+   17 parameter_list_tail: ',' type T_IDENTIFIER • parameter_list_tail
+
+    ','  shift, and go to state 120
+
+    $default  reduce using rule 16 (parameter_list_tail)
+
+    parameter_list_tail  go to state 136
+
+
+State 132
+
+   13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions • '}'
+
+    '}'  shift, and go to state 137
+
+
+State 133
+
+   30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 • '{' instructions '}' $@10 instructions
+
+    '{'  shift, and go to state 138
+
+
+State 134
+
+   35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 instructions '}' $@14 • instructions
+
+    T_INT_KW         shift, and go to state 1
+    T_FLOAT_KW       shift, and go to state 2
+    T_DOUBLE_KW      shift, and go to state 3
+    T_IF_KW          shift, and go to state 4
+    T_WHILE_KW       shift, and go to state 5
+    T_RETURN         shift, and go to state 7
+    T_COMM           shift, and go to state 8
+    T_PRINTF_PARAM   shift, and go to state 10
+    T_PRINTF_SIMPLE  shift, and go to state 11
+    T_SCANF          shift, and go to state 12
+    T_IDENTIFIER     shift, and go to state 13
+    '{'              shift, and go to state 14
+
+    ';'       reduce using rule 39 (instruction)
+    $default  reduce using rule 24 (instructions)
+
+    function_call  go to state 17
+    instructions   go to state 139
+    instruction    go to state 19
+    declarations   go to state 20
+    declaration    go to state 21
+    type           go to state 44
+    variable_load  go to state 23
+
+
+State 135
 
     9 function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' $@3 instructions '}' •
 
     $default  reduce using rule 9 (function_declaration)
 
 
-State 129
+State 136
 
    17 parameter_list_tail: ',' type T_IDENTIFIER parameter_list_tail •
 
     $default  reduce using rule 17 (parameter_list_tail)
 
 
-State 130
+State 137
 
    13 function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}' •
 
     $default  reduce using rule 13 (function_declaration)
 
 
-State 131
+State 138
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' • instructions '}' $@10 instructions
 
@@ -1915,38 +2172,38 @@ State 131
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 133
+    instructions   go to state 140
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 132
+State 139
 
    35 instructions: T_WHILE_KW $@11 '(' expression ')' $@12 '{' $@13 instructions '}' $@14 instructions •
 
     $default  reduce using rule 35 (instructions)
 
 
-State 133
+State 140
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions • '}' $@10 instructions
 
-    '}'  shift, and go to state 134
+    '}'  shift, and go to state 141
 
 
-State 134
+State 141
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' • $@10 instructions
 
     $default  reduce using rule 29 ($@10)
 
-    $@10  go to state 135
+    $@10  go to state 142
 
 
-State 135
+State 142
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 • instructions
 
@@ -1967,15 +2224,15 @@ State 135
     $default  reduce using rule 24 (instructions)
 
     function_call  go to state 17
-    instructions   go to state 136
+    instructions   go to state 143
     instruction    go to state 19
     declarations   go to state 20
     declaration    go to state 21
-    type           go to state 40
+    type           go to state 44
     variable_load  go to state 23
 
 
-State 136
+State 143
 
    30 instructions: T_IF_KW '(' expression ')' $@7 '{' instructions '}' $@8 T_ELSE_KW $@9 '{' instructions '}' $@10 instructions •
 

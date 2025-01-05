@@ -1,16 +1,124 @@
-void lala()
-{
-    printf("Call from function\n");
+// Program principal cu tipuri de date int, float, double si fara #include
+
+void conversiiDeTip() {
+    int intVar = 10;
+    double doubleVar;
+    float floatVar;
+
+    // Conversii explicite
+    doubleVar = (double)intVar;
+    floatVar = (float)intVar;
+
+    printf("Conversii de tip:\n");
+    printf("intVar: ");
+    printf("%d\n", intVar);
+    printf("doubleVar: ");
+    printf("%lf\n", doubleVar);
+    printf("floatVar: ");
+    printf("%f\n", floatVar);
 }
 
-int main()
-{
-    int a; // Comentariu
-    lala();
-    printf("a=%d\n", a);
+void operatiiAritmetice() {
+    int a = 5, b = 3;
+    float x = 2.5f, y = 1.5f;
+
+    printf("Operatii aritmetice:\n");
+    printf("Suma intregi: ");
+    int sum = a + b;
+    printf("%d\n", sum);
+    printf("Produs intregi: ");
+    sum = a * b;
+    printf("%d\n", sum);
+    printf("Suma reale: ");
+    float sumReal = x + y;
+    printf("%f\n", sumReal);
 }
 
-int lol()
-{
-    return 12;
+void instructiuniDeControl() {
+    int numar = 10;
+
+    printf("Instructiuni de control:\n");
+    if (numar > 5) {
+        printf("%d este mai mare decat 5\n", numar);
+    } else {
+        printf("%d este mai mic sau egal cu 5\n", numar);
+    }
+}
+
+void buclaWhile() {
+    int i = 0;
+
+    printf("Bucla while:\n");
+    while (i < 5) {
+        printf("i: %d\n", i);
+        i=i+1;
+    }
+}
+
+int adunare(int a, int b) {
+    return a + b;
+}
+
+void functiiDemo() {
+    int rezultat;
+
+    printf("Functii:\n");
+
+    // Apelam functia de adunare
+    rezultat = adunare(3, 4);
+    printf("Rezultatul adunarii: ");
+    printf("%d\n", rezultat);
+}
+
+
+
+void blocDeCod() {
+    printf("Bloc de cod:\n");
+    {
+        int localVar = 20;
+        printf("Variabila locala din blocul de cod: ");
+        printf("%d\n", localVar);
+    }
+}
+
+void inputOutput() {
+    int numar;
+    float real;
+    double mare;
+
+    // Input de la utilizator
+    printf("Introduceti un numar intreg: ");
+    scanf("%d", &numar);
+
+    printf("Introduceti un numar real (float): ");
+    scanf("%f", &real);
+
+    printf("Introduceti un numar mare (double): ");
+    scanf("%lf", &mare);
+
+    // Output
+    printf("Ai introdus:\n");
+    printf("int = ");
+    printf("%d\n", numar);
+    printf("float = ");
+    printf("%f\n", real);
+    printf("double = ");
+    printf("%lf\n", mare);
+}
+
+int main() {
+    // Testarea functionalitatilor cerute
+    /* Comentariu pe
+    mai multe randuri */
+    //inputOutput();
+    conversiiDeTip();
+    operatiiAritmetice();
+    instructiuniDeControl();
+    buclaWhile();
+    blocDeCod();
+    functiiDemo();
+
+    // Mesaj de finalizare
+    printf("Programul s-a terminat cu succes.\n");
+    return 0;
 }

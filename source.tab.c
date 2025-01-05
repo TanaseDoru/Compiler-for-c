@@ -88,10 +88,11 @@
     extern int lineNo;
 
     char currentfunction[256];
+    int isActiveCast = 0; // Folosit pentru a verifica daca se face cast, daca da, atunci nu se va da push la 2 valori(Una de primul tip si a doua de tipul cast-ului)
 
     enum varType currentType;    
 
-#line 95 "source.tab.c"
+#line 96 "source.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -129,67 +130,71 @@ enum yysymbol_kind_t
   YYSYMBOL_T_INT_KW = 7,                   /* T_INT_KW  */
   YYSYMBOL_T_FLOAT_KW = 8,                 /* T_FLOAT_KW  */
   YYSYMBOL_T_DOUBLE_KW = 9,                /* T_DOUBLE_KW  */
-  YYSYMBOL_T_IF_KW = 10,                   /* T_IF_KW  */
-  YYSYMBOL_T_WHILE_KW = 11,                /* T_WHILE_KW  */
-  YYSYMBOL_T_ELSE_KW = 12,                 /* T_ELSE_KW  */
-  YYSYMBOL_T_VOID_KW = 13,                 /* T_VOID_KW  */
-  YYSYMBOL_T_RETURN = 14,                  /* T_RETURN  */
-  YYSYMBOL_T_COMM = 15,                    /* T_COMM  */
-  YYSYMBOL_T_ERROR = 16,                   /* T_ERROR  */
-  YYSYMBOL_T_PRINTF_PARAM = 17,            /* T_PRINTF_PARAM  */
-  YYSYMBOL_T_PRINTF_SIMPLE = 18,           /* T_PRINTF_SIMPLE  */
-  YYSYMBOL_T_SCANF = 19,                   /* T_SCANF  */
-  YYSYMBOL_T_INTEGER_VAL = 20,             /* T_INTEGER_VAL  */
-  YYSYMBOL_T_IDENTIFIER = 21,              /* T_IDENTIFIER  */
-  YYSYMBOL_T_DOUBLE_VAL = 22,              /* T_DOUBLE_VAL  */
-  YYSYMBOL_23_ = 23,                       /* '+'  */
-  YYSYMBOL_24_ = 24,                       /* '-'  */
-  YYSYMBOL_25_ = 25,                       /* '>'  */
-  YYSYMBOL_26_ = 26,                       /* '<'  */
-  YYSYMBOL_27_ = 27,                       /* '*'  */
-  YYSYMBOL_28_ = 28,                       /* '/'  */
-  YYSYMBOL_29_ = 29,                       /* '('  */
-  YYSYMBOL_30_ = 30,                       /* ')'  */
-  YYSYMBOL_31_ = 31,                       /* '{'  */
-  YYSYMBOL_32_ = 32,                       /* '}'  */
-  YYSYMBOL_33_ = 33,                       /* ','  */
-  YYSYMBOL_34_ = 34,                       /* ';'  */
-  YYSYMBOL_35_ = 35,                       /* '='  */
-  YYSYMBOL_YYACCEPT = 36,                  /* $accept  */
-  YYSYMBOL_program = 37,                   /* program  */
-  YYSYMBOL_functions = 38,                 /* functions  */
-  YYSYMBOL_function_declaration = 39,      /* function_declaration  */
-  YYSYMBOL_40_1 = 40,                      /* $@1  */
-  YYSYMBOL_41_2 = 41,                      /* $@2  */
-  YYSYMBOL_42_3 = 42,                      /* $@3  */
-  YYSYMBOL_43_4 = 43,                      /* $@4  */
-  YYSYMBOL_44_5 = 44,                      /* $@5  */
-  YYSYMBOL_45_6 = 45,                      /* $@6  */
-  YYSYMBOL_parameter_list = 46,            /* parameter_list  */
-  YYSYMBOL_parameter_list_tail = 47,       /* parameter_list_tail  */
-  YYSYMBOL_midrule_lbs = 48,               /* midrule_lbs  */
-  YYSYMBOL_function_call = 49,             /* function_call  */
-  YYSYMBOL_argument_list = 50,             /* argument_list  */
-  YYSYMBOL_argument_list_tail = 51,        /* argument_list_tail  */
-  YYSYMBOL_instructions = 52,              /* instructions  */
-  YYSYMBOL_53_7 = 53,                      /* $@7  */
-  YYSYMBOL_54_8 = 54,                      /* $@8  */
-  YYSYMBOL_55_9 = 55,                      /* $@9  */
-  YYSYMBOL_56_10 = 56,                     /* $@10  */
-  YYSYMBOL_57_11 = 57,                     /* $@11  */
-  YYSYMBOL_58_12 = 58,                     /* $@12  */
-  YYSYMBOL_59_13 = 59,                     /* $@13  */
-  YYSYMBOL_60_14 = 60,                     /* $@14  */
-  YYSYMBOL_61_15 = 61,                     /* $@15  */
-  YYSYMBOL_62_16 = 62,                     /* $@16  */
-  YYSYMBOL_instruction = 63,               /* instruction  */
-  YYSYMBOL_declarations = 64,              /* declarations  */
-  YYSYMBOL_declaration = 65,               /* declaration  */
-  YYSYMBOL_type = 66,                      /* type  */
-  YYSYMBOL_variable_list = 67,             /* variable_list  */
-  YYSYMBOL_variable_declaration = 68,      /* variable_declaration  */
-  YYSYMBOL_variable_load = 69,             /* variable_load  */
-  YYSYMBOL_expression = 70                 /* expression  */
+  YYSYMBOL_T_INT_CAST = 10,                /* T_INT_CAST  */
+  YYSYMBOL_T_FLOAT_CAST = 11,              /* T_FLOAT_CAST  */
+  YYSYMBOL_T_DOUBLE_CAST = 12,             /* T_DOUBLE_CAST  */
+  YYSYMBOL_T_IF_KW = 13,                   /* T_IF_KW  */
+  YYSYMBOL_T_WHILE_KW = 14,                /* T_WHILE_KW  */
+  YYSYMBOL_T_ELSE_KW = 15,                 /* T_ELSE_KW  */
+  YYSYMBOL_T_VOID_KW = 16,                 /* T_VOID_KW  */
+  YYSYMBOL_T_RETURN = 17,                  /* T_RETURN  */
+  YYSYMBOL_T_COMM = 18,                    /* T_COMM  */
+  YYSYMBOL_T_ERROR = 19,                   /* T_ERROR  */
+  YYSYMBOL_T_PRINTF_PARAM = 20,            /* T_PRINTF_PARAM  */
+  YYSYMBOL_T_PRINTF_SIMPLE = 21,           /* T_PRINTF_SIMPLE  */
+  YYSYMBOL_T_SCANF = 22,                   /* T_SCANF  */
+  YYSYMBOL_T_INTEGER_VAL = 23,             /* T_INTEGER_VAL  */
+  YYSYMBOL_T_IDENTIFIER = 24,              /* T_IDENTIFIER  */
+  YYSYMBOL_T_DOUBLE_VAL = 25,              /* T_DOUBLE_VAL  */
+  YYSYMBOL_T_FLOAT_VAL = 26,               /* T_FLOAT_VAL  */
+  YYSYMBOL_27_ = 27,                       /* '+'  */
+  YYSYMBOL_28_ = 28,                       /* '-'  */
+  YYSYMBOL_29_ = 29,                       /* '>'  */
+  YYSYMBOL_30_ = 30,                       /* '<'  */
+  YYSYMBOL_31_ = 31,                       /* '*'  */
+  YYSYMBOL_32_ = 32,                       /* '/'  */
+  YYSYMBOL_33_ = 33,                       /* '('  */
+  YYSYMBOL_34_ = 34,                       /* ')'  */
+  YYSYMBOL_35_ = 35,                       /* '{'  */
+  YYSYMBOL_36_ = 36,                       /* '}'  */
+  YYSYMBOL_37_ = 37,                       /* ','  */
+  YYSYMBOL_38_ = 38,                       /* ';'  */
+  YYSYMBOL_39_ = 39,                       /* '='  */
+  YYSYMBOL_YYACCEPT = 40,                  /* $accept  */
+  YYSYMBOL_program = 41,                   /* program  */
+  YYSYMBOL_functions = 42,                 /* functions  */
+  YYSYMBOL_function_declaration = 43,      /* function_declaration  */
+  YYSYMBOL_44_1 = 44,                      /* $@1  */
+  YYSYMBOL_45_2 = 45,                      /* $@2  */
+  YYSYMBOL_46_3 = 46,                      /* $@3  */
+  YYSYMBOL_47_4 = 47,                      /* $@4  */
+  YYSYMBOL_48_5 = 48,                      /* $@5  */
+  YYSYMBOL_49_6 = 49,                      /* $@6  */
+  YYSYMBOL_parameter_list = 50,            /* parameter_list  */
+  YYSYMBOL_parameter_list_tail = 51,       /* parameter_list_tail  */
+  YYSYMBOL_midrule_lbs = 52,               /* midrule_lbs  */
+  YYSYMBOL_function_call = 53,             /* function_call  */
+  YYSYMBOL_argument_list = 54,             /* argument_list  */
+  YYSYMBOL_argument_list_tail = 55,        /* argument_list_tail  */
+  YYSYMBOL_instructions = 56,              /* instructions  */
+  YYSYMBOL_57_7 = 57,                      /* $@7  */
+  YYSYMBOL_58_8 = 58,                      /* $@8  */
+  YYSYMBOL_59_9 = 59,                      /* $@9  */
+  YYSYMBOL_60_10 = 60,                     /* $@10  */
+  YYSYMBOL_61_11 = 61,                     /* $@11  */
+  YYSYMBOL_62_12 = 62,                     /* $@12  */
+  YYSYMBOL_63_13 = 63,                     /* $@13  */
+  YYSYMBOL_64_14 = 64,                     /* $@14  */
+  YYSYMBOL_65_15 = 65,                     /* $@15  */
+  YYSYMBOL_66_16 = 66,                     /* $@16  */
+  YYSYMBOL_instruction = 67,               /* instruction  */
+  YYSYMBOL_declarations = 68,              /* declarations  */
+  YYSYMBOL_declaration = 69,               /* declaration  */
+  YYSYMBOL_type = 70,                      /* type  */
+  YYSYMBOL_variable_list = 71,             /* variable_list  */
+  YYSYMBOL_variable_declaration = 72,      /* variable_declaration  */
+  YYSYMBOL_variable_load = 73,             /* variable_load  */
+  YYSYMBOL_expression = 74                 /* expression  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -518,21 +523,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  36
+#define YYFINAL  40
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   222
+#define YYLAST   239
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  36
+#define YYNTOKENS  40
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  35
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  74
+#define YYNRULES  78
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  137
+#define YYNSTATES  144
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   277
+#define YYMAXUTOK   281
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -550,15 +555,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      29,    30,    27,    23,    33,    24,     2,    28,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    34,
-      26,    35,    25,     2,     2,     2,     2,     2,     2,     2,
+      33,    34,    31,    27,    37,    28,     2,    32,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    38,
+      30,    39,    29,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    31,     2,    32,     2,     2,     2,     2,
+       2,     2,     2,    35,     2,    36,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -573,21 +578,22 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    71,    71,    75,    76,    79,    80,    82,    88,    90,
-      82,   101,   107,   109,   101,   122,   123,   126,   127,   131,
-     135,   151,   152,   155,   156,   159,   160,   161,   177,   178,
-     180,   161,   182,   187,   188,   190,   182,   192,   194,   192,
-     198,   199,   200,   201,   202,   203,   204,   221,   314,   416,
-     417,   421,   425,   426,   427,   431,   432,   436,   445,   460,
-     474,   486,   487,   488,   489,   490,   491,   492,   493,   494,
-     495,   496,   497,   498,   499
+       0,    74,    74,    78,    79,    82,    83,    85,    98,   100,
+      85,   112,   124,   126,   112,   140,   141,   154,   155,   169,
+     173,   189,   190,   193,   194,   197,   198,   199,   215,   216,
+     218,   199,   220,   225,   226,   228,   220,   230,   232,   230,
+     236,   237,   238,   239,   240,   241,   242,   259,   367,   481,
+     482,   486,   490,   491,   492,   496,   497,   501,   510,   525,
+     539,   552,   553,   554,   555,   556,   557,   558,   559,   560,
+     561,   562,   563,   564,   565,   566,   567,   568,   569
 };
 #endif
 
@@ -604,10 +610,11 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "T_EQ", "T_LE", "T_GE",
-  "T_NEQ", "T_INT_KW", "T_FLOAT_KW", "T_DOUBLE_KW", "T_IF_KW",
-  "T_WHILE_KW", "T_ELSE_KW", "T_VOID_KW", "T_RETURN", "T_COMM", "T_ERROR",
-  "T_PRINTF_PARAM", "T_PRINTF_SIMPLE", "T_SCANF", "T_INTEGER_VAL",
-  "T_IDENTIFIER", "T_DOUBLE_VAL", "'+'", "'-'", "'>'", "'<'", "'*'", "'/'",
+  "T_NEQ", "T_INT_KW", "T_FLOAT_KW", "T_DOUBLE_KW", "T_INT_CAST",
+  "T_FLOAT_CAST", "T_DOUBLE_CAST", "T_IF_KW", "T_WHILE_KW", "T_ELSE_KW",
+  "T_VOID_KW", "T_RETURN", "T_COMM", "T_ERROR", "T_PRINTF_PARAM",
+  "T_PRINTF_SIMPLE", "T_SCANF", "T_INTEGER_VAL", "T_IDENTIFIER",
+  "T_DOUBLE_VAL", "T_FLOAT_VAL", "'+'", "'-'", "'>'", "'<'", "'*'", "'/'",
   "'('", "')'", "'{'", "'}'", "','", "';'", "'='", "$accept", "program",
   "functions", "function_declaration", "$@1", "$@2", "$@3", "$@4", "$@5",
   "$@6", "parameter_list", "parameter_list_tail", "midrule_lbs",
@@ -624,7 +631,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-32)
+#define YYPACT_NINF (-36)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -638,20 +645,21 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     129,   -32,   -32,   -32,   -28,   -32,   -18,    -3,   -32,   -32,
-     -32,   -32,   -32,   -20,   -32,    13,   -32,   -32,   -32,   -14,
-     -32,    60,     3,   -32,    -3,    -6,   -32,   -32,    -2,   -32,
-      -3,   -32,   194,    -3,    -1,   147,   -32,    52,   147,   -32,
-      29,   -21,   -32,   -12,     6,    -3,    27,   166,    -3,    -3,
-      -3,    -3,    -3,    -3,    -3,    -3,    -3,    -3,   194,    -3,
-      26,   -32,    41,   -32,    28,    -3,    42,    29,   -32,   179,
-     -32,   -32,   -22,   -22,   -22,   -22,   -22,   -22,   -22,   -22,
-     -32,   -32,    40,    49,   -32,   -32,   194,   -32,   -32,    47,
-     -32,    60,   -32,    -3,   -32,   147,    60,   147,    48,    51,
-      62,    49,   -32,    54,    56,   -32,    55,    57,   -32,    61,
-     -32,   147,   -32,    60,   -32,   -32,    79,    67,   147,    73,
-     147,   -32,   -32,    69,    57,    70,    72,   147,   -32,   -32,
-     -32,   147,   -32,    74,   -32,   147,   -32
+     132,   -36,   -36,   -36,   -32,   -36,   -21,    47,   -36,   -36,
+     -36,   -36,   -36,   -34,   -36,    24,   -36,   -36,   -36,   -16,
+     -36,    22,     1,   -36,    47,    -6,   -36,    47,    47,    47,
+     -36,     7,   -36,   -36,    47,   -36,     5,    47,     8,   151,
+     -36,    12,   151,   -36,    30,   -27,   -36,    19,   173,    47,
+      27,     5,     5,     5,   187,    47,    47,    47,    47,    47,
+      47,    47,    47,    47,    47,     5,    47,    26,   -36,    39,
+     -36,    25,    47,    32,    30,   -36,   205,   -36,   -36,   -17,
+     -17,   -17,   -17,   -17,   -17,   -17,   -17,   -36,   -36,    34,
+      82,   -36,   -36,     5,   -36,   -36,    31,   -36,    22,   -36,
+      47,   -36,   151,    22,   151,    40,    42,    50,    82,   -36,
+      43,    45,   -36,    44,    41,   -36,    49,   -36,   151,   -36,
+      22,   -36,   -36,    67,    55,   151,    69,   151,   -36,   -36,
+      58,    41,    59,    61,   151,   -36,   -36,   -36,   151,   -36,
+      62,   -36,   151,   -36
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -661,36 +669,37 @@ static const yytype_int8 yydefact[] =
 {
       25,    52,    54,    53,     0,    32,     0,     0,    41,     4,
       47,    46,    48,    19,    37,     0,     5,    42,     3,     0,
-      44,    49,     0,    45,     0,     0,     7,    62,    60,    61,
-       0,    74,    43,     0,     0,    25,     1,     2,    25,    50,
-       0,    57,    51,    55,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,    59,    21,
-       0,     6,     0,    26,    57,     0,     0,     0,    27,     0,
-       8,    73,    71,    68,    70,    72,    63,    64,    69,    67,
-      65,    66,     0,    23,    38,    11,    58,    12,    56,     0,
-      33,    15,    20,     0,    22,    25,    15,    25,     0,     0,
-       0,    23,    39,     0,     0,    34,     0,    17,    24,     0,
-      28,    25,     9,     0,    16,    13,     0,     0,    25,     0,
-      25,    29,    35,     0,    17,     0,     0,    25,    10,    18,
-      14,    25,    36,     0,    30,    25,    31
+      44,    49,     0,    45,     0,     0,     7,     0,     0,     0,
+      62,    60,    61,    63,     0,    78,    43,     0,     0,    25,
+       1,     2,    25,    50,     0,    57,    51,    55,     0,     0,
+       0,    64,    65,    66,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    59,    21,     0,     6,     0,
+      26,    57,     0,     0,     0,    27,     0,     8,    77,    75,
+      72,    74,    76,    67,    68,    73,    71,    69,    70,     0,
+      23,    38,    11,    58,    12,    56,     0,    33,    15,    20,
+       0,    22,    25,    15,    25,     0,     0,     0,    23,    39,
+       0,     0,    34,     0,    17,    24,     0,    28,    25,     9,
+       0,    16,    13,     0,     0,    25,     0,    25,    29,    35,
+       0,    17,     0,     0,    25,    10,    18,    14,    25,    36,
+       0,    30,    25,    31
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -32,   -32,   -32,    68,   -32,   -32,   -32,   -32,   -32,   -32,
-      11,   -16,   -32,     0,   -32,     8,   -31,   -32,   -32,   -32,
-     -32,   -32,   -32,   -32,   -32,   -32,   -32,   -32,    89,   -32,
-       2,    45,   -32,   -32,    -8
+     -36,   -36,   -36,    56,   -36,   -36,   -36,   -36,   -36,   -36,
+      -2,   -25,   -36,     0,   -36,     9,   -35,   -36,   -36,   -36,
+     -36,   -36,   -36,   -36,   -36,   -36,   -36,   -36,    87,   -36,
+       2,    46,   -36,   -36,   -11
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_uint8 yydefgoto[] =
 {
-       0,    15,    37,    16,    46,    91,   118,    66,    96,   120,
-      99,   114,    34,    31,    82,    94,    18,    89,   116,   126,
-     135,    25,    98,   111,   127,    35,    95,    19,    20,    21,
-      40,    42,    43,    23,    32
+       0,    15,    41,    16,    50,    98,   125,    73,   103,   127,
+     106,   121,    38,    35,    89,   101,    18,    96,   123,   133,
+     142,    25,   105,   118,   134,    39,   102,    19,    20,    21,
+      44,    46,    47,    23,    36
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -698,89 +707,92 @@ static const yytype_uint8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      17,    24,    22,    26,    60,    56,    57,    63,   -11,    48,
-      49,    50,    51,    36,    65,    33,    44,    27,    28,    29,
-      38,    67,    47,    45,    41,    58,    30,   -19,    59,    52,
-      53,    54,    55,    56,    57,    17,    68,    69,    17,    62,
-      72,    73,    74,    75,    76,    77,    78,    79,    80,    81,
-      64,    83,    48,    49,    50,    51,    70,    86,    84,     1,
-       2,     3,    85,    65,   102,     6,   104,     1,     2,     3,
-      92,    87,    52,    53,    54,    55,    56,    57,    97,   105,
-     117,   106,    93,   107,   109,   101,   112,   123,   110,   125,
-     113,   121,   115,   100,   124,    17,   132,    17,   100,   122,
-     133,   128,   130,   131,   136,    61,   134,   103,   129,   108,
-      39,    17,    88,     0,     0,   119,     0,     0,    17,     0,
-      17,     0,     0,     0,     0,     0,     0,    17,     0,     0,
-       0,    17,     0,     0,     0,    17,     1,     2,     3,     4,
-       5,     0,     6,     7,     8,     9,    10,    11,    12,     0,
-      13,     0,     0,     0,     1,     2,     3,     4,     5,     0,
-      14,     7,     8,   -40,    10,    11,    12,     0,    13,    48,
-      49,    50,    51,     0,     0,     0,     0,     0,    14,     0,
-       0,   -40,    48,    49,    50,    51,     0,     0,     0,    52,
-      53,    54,    55,    56,    57,     0,    71,    48,    49,    50,
-      51,     0,    52,    53,    54,    55,    56,    57,     0,    90,
-       0,     0,     0,     0,     0,     0,     0,    52,    53,    54,
-      55,    56,    57
+      17,    24,    22,    26,    67,    37,   -11,    70,    55,    56,
+      57,    58,    72,    48,    63,    64,    51,    52,    53,     1,
+       2,     3,    42,    54,    40,    45,    65,    49,     6,     1,
+       2,     3,    59,    60,    61,    62,    63,    64,    76,    17,
+     -19,    66,    17,    69,    79,    80,    81,    82,    83,    84,
+      85,    86,    87,    88,    71,    90,    74,    27,    28,    29,
+      77,    93,    91,    92,    72,    94,   104,   109,    99,   111,
+      30,    31,    32,    33,   114,   112,   113,   116,   120,   119,
+      34,   117,   128,   124,   122,    55,    56,    57,    58,   108,
+     130,   129,   132,   131,   135,   137,   138,    68,   141,   139,
+     107,   110,    17,   140,    17,   107,   136,   143,    43,    59,
+      60,    61,    62,    63,    64,     0,     0,   115,    17,   100,
+      95,     0,   126,     0,     0,    17,     0,    17,     0,     0,
+       0,     0,     0,     0,    17,     0,     0,     0,    17,     1,
+       2,     3,    17,     0,     0,     4,     5,     0,     6,     7,
+       8,     9,    10,    11,    12,     0,    13,     0,     1,     2,
+       3,     0,     0,     0,     4,     5,     0,    14,     7,     8,
+     -40,    10,    11,    12,     0,    13,    55,    56,    57,    58,
+       0,     0,     0,     0,     0,     0,    14,     0,     0,   -40,
+      55,    56,    57,    58,     0,     0,     0,     0,     0,     0,
+      59,    60,    61,    62,    63,    64,     0,    75,    55,    56,
+      57,    58,     0,     0,    59,    60,    61,    62,    63,    64,
+       0,    78,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    59,    60,    61,    62,    63,    64,     0,    97
 };
 
 static const yytype_int16 yycheck[] =
 {
-       0,    29,     0,    21,    35,    27,    28,    38,    29,     3,
-       4,     5,     6,     0,    35,    35,    24,    20,    21,    22,
-      34,    33,    30,    29,    21,    33,    29,    29,    29,    23,
-      24,    25,    26,    27,    28,    35,    30,    45,    38,    37,
-      48,    49,    50,    51,    52,    53,    54,    55,    56,    57,
-      21,    59,     3,     4,     5,     6,    29,    65,    32,     7,
-       8,     9,    21,    35,    95,    13,    97,     7,     8,     9,
-      30,    29,    23,    24,    25,    26,    27,    28,    31,    31,
-     111,    30,    33,    21,    30,    93,    31,   118,    32,   120,
-      33,    12,    31,    91,    21,    95,   127,    97,    96,    32,
-     131,    32,    32,    31,   135,    37,    32,    96,   124,   101,
-      21,   111,    67,    -1,    -1,   113,    -1,    -1,   118,    -1,
-     120,    -1,    -1,    -1,    -1,    -1,    -1,   127,    -1,    -1,
-      -1,   131,    -1,    -1,    -1,   135,     7,     8,     9,    10,
-      11,    -1,    13,    14,    15,    16,    17,    18,    19,    -1,
-      21,    -1,    -1,    -1,     7,     8,     9,    10,    11,    -1,
-      31,    14,    15,    34,    17,    18,    19,    -1,    21,     3,
-       4,     5,     6,    -1,    -1,    -1,    -1,    -1,    31,    -1,
-      -1,    34,     3,     4,     5,     6,    -1,    -1,    -1,    23,
-      24,    25,    26,    27,    28,    -1,    30,     3,     4,     5,
-       6,    -1,    23,    24,    25,    26,    27,    28,    -1,    30,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    23,    24,    25,
-      26,    27,    28
+       0,    33,     0,    24,    39,    39,    33,    42,     3,     4,
+       5,     6,    39,    24,    31,    32,    27,    28,    29,     7,
+       8,     9,    38,    34,     0,    24,    37,    33,    16,     7,
+       8,     9,    27,    28,    29,    30,    31,    32,    49,    39,
+      33,    33,    42,    41,    55,    56,    57,    58,    59,    60,
+      61,    62,    63,    64,    24,    66,    37,    10,    11,    12,
+      33,    72,    36,    24,    39,    33,    35,   102,    34,   104,
+      23,    24,    25,    26,    24,    35,    34,    34,    37,    35,
+      33,    36,    15,   118,    35,     3,     4,     5,     6,   100,
+     125,    36,   127,    24,    36,    36,    35,    41,    36,   134,
+      98,   103,   102,   138,   104,   103,   131,   142,    21,    27,
+      28,    29,    30,    31,    32,    -1,    -1,   108,   118,    37,
+      74,    -1,   120,    -1,    -1,   125,    -1,   127,    -1,    -1,
+      -1,    -1,    -1,    -1,   134,    -1,    -1,    -1,   138,     7,
+       8,     9,   142,    -1,    -1,    13,    14,    -1,    16,    17,
+      18,    19,    20,    21,    22,    -1,    24,    -1,     7,     8,
+       9,    -1,    -1,    -1,    13,    14,    -1,    35,    17,    18,
+      38,    20,    21,    22,    -1,    24,     3,     4,     5,     6,
+      -1,    -1,    -1,    -1,    -1,    -1,    35,    -1,    -1,    38,
+       3,     4,     5,     6,    -1,    -1,    -1,    -1,    -1,    -1,
+      27,    28,    29,    30,    31,    32,    -1,    34,     3,     4,
+       5,     6,    -1,    -1,    27,    28,    29,    30,    31,    32,
+      -1,    34,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    27,    28,    29,    30,    31,    32,    -1,    34
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     7,     8,     9,    10,    11,    13,    14,    15,    16,
-      17,    18,    19,    21,    31,    37,    39,    49,    52,    63,
-      64,    65,    66,    69,    29,    57,    21,    20,    21,    22,
-      29,    49,    70,    35,    48,    61,     0,    38,    34,    64,
-      66,    21,    67,    68,    70,    29,    40,    70,     3,     4,
-       5,     6,    23,    24,    25,    26,    27,    28,    70,    29,
-      52,    39,    66,    52,    21,    35,    43,    33,    30,    70,
-      29,    30,    70,    70,    70,    70,    70,    70,    70,    70,
-      70,    70,    50,    70,    32,    21,    70,    29,    67,    53,
-      30,    41,    30,    33,    51,    62,    44,    31,    58,    46,
-      66,    70,    52,    46,    52,    31,    30,    21,    51,    30,
-      32,    59,    31,    33,    47,    31,    54,    52,    42,    66,
-      45,    12,    32,    52,    21,    52,    55,    60,    32,    47,
-      32,    31,    52,    52,    32,    56,    52
+       0,     7,     8,     9,    13,    14,    16,    17,    18,    19,
+      20,    21,    22,    24,    35,    41,    43,    53,    56,    67,
+      68,    69,    70,    73,    33,    61,    24,    10,    11,    12,
+      23,    24,    25,    26,    33,    53,    74,    39,    52,    65,
+       0,    42,    38,    68,    70,    24,    71,    72,    74,    33,
+      44,    74,    74,    74,    74,     3,     4,     5,     6,    27,
+      28,    29,    30,    31,    32,    74,    33,    56,    43,    70,
+      56,    24,    39,    47,    37,    34,    74,    33,    34,    74,
+      74,    74,    74,    74,    74,    74,    74,    74,    74,    54,
+      74,    36,    24,    74,    33,    71,    57,    34,    45,    34,
+      37,    55,    66,    48,    35,    62,    50,    70,    74,    56,
+      50,    56,    35,    34,    24,    55,    34,    36,    63,    35,
+      37,    51,    35,    58,    56,    46,    70,    49,    15,    36,
+      56,    24,    56,    59,    64,    36,    51,    36,    35,    56,
+      56,    36,    60,    56
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    36,    37,    37,    37,    38,    38,    40,    41,    42,
-      39,    43,    44,    45,    39,    46,    46,    47,    47,    48,
-      49,    50,    50,    51,    51,    52,    52,    53,    54,    55,
-      56,    52,    57,    58,    59,    60,    52,    61,    62,    52,
-      63,    63,    63,    63,    63,    63,    63,    63,    63,    64,
-      64,    65,    66,    66,    66,    67,    67,    68,    68,    69,
-      70,    70,    70,    70,    70,    70,    70,    70,    70,    70,
-      70,    70,    70,    70,    70
+       0,    40,    41,    41,    41,    42,    42,    44,    45,    46,
+      43,    47,    48,    49,    43,    50,    50,    51,    51,    52,
+      53,    54,    54,    55,    55,    56,    56,    57,    58,    59,
+      60,    56,    61,    62,    63,    64,    56,    65,    66,    56,
+      67,    67,    67,    67,    67,    67,    67,    67,    67,    68,
+      68,    69,    70,    70,    70,    71,    71,    72,    72,    73,
+      74,    74,    74,    74,    74,    74,    74,    74,    74,    74,
+      74,    74,    74,    74,    74,    74,    74,    74,    74
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -792,8 +804,8 @@ static const yytype_int8 yyr2[] =
        0,    16,     0,     0,     0,     0,    12,     0,     0,     6,
        0,     1,     1,     2,     1,     1,     1,     1,     1,     1,
        2,     2,     1,     1,     1,     1,     3,     1,     3,     3,
-       1,     1,     1,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     1
+       1,     1,     1,     1,     2,     2,     2,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     3,     3,     1
 };
 
 
@@ -1370,105 +1382,140 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* program: T_ERROR  */
-#line 76 "source.y"
+#line 79 "source.y"
                                              {errors++;}
-#line 1376 "source.tab.c"
+#line 1388 "source.tab.c"
     break;
 
   case 7: /* $@1: %empty  */
-#line 82 "source.y"
+#line 85 "source.y"
                                                  {
                                                 if(strcmp((yyvsp[0].str), "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
-                                                addFunction((yyvsp[0].str), getCurrentIndex())->type = currentType; 
+                                                functionRecord*ptr = addFunction((yyvsp[0].str), getCurrentIndex());
+                                                if(ptr == NULL)
+                                                {
+                                                    errors++;
+                                                    printf("Line %d: Function %s already defined.\n",(yylsp[-1]).first_line, (yyvsp[0].str));
+                                                    break;
+                                                }
+                                                ptr->type = currentType; 
                                                 strcpy(currentfunction, (yyvsp[0].str));
                                             }
-#line 1387 "source.tab.c"
+#line 1406 "source.tab.c"
     break;
 
   case 8: /* $@2: %empty  */
-#line 88 "source.y"
-                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[-3]).first_line);}
-#line 1393 "source.tab.c"
+#line 98 "source.y"
+                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[-3]).first_line); increaseScope();}
+#line 1412 "source.tab.c"
     break;
 
   case 9: /* $@3: %empty  */
-#line 90 "source.y"
+#line 100 "source.y"
                                             {
                                                 
                                             }
-#line 1401 "source.tab.c"
+#line 1420 "source.tab.c"
     break;
 
   case 10: /* function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' $@3 instructions '}'  */
-#line 94 "source.y"
+#line 104 "source.y"
                                             {
                                                 
                                                 genCode(DEC_SCOPE, "", 0, -1, (yylsp[-10]).first_line);
+                                                decreaseScope();
                                                 genCode(RET, "void", 0, 0, (yylsp[-10]).first_line);
                                                 if(strcmp(currentfunction, "main")==0)
                                                     genCode(HALT, "", 0, -1, (yylsp[-10]).first_line);
                                             }
-#line 1413 "source.tab.c"
+#line 1433 "source.tab.c"
     break;
 
   case 11: /* $@4: %empty  */
-#line 101 "source.y"
+#line 112 "source.y"
                                               {
                                                 if(strcmp((yyvsp[0].str), "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
-                                                addFunction((yyvsp[0].str), getCurrentIndex())->type = currentType; 
+                                                functionRecord*ptr = addFunction((yyvsp[0].str), getCurrentIndex());
+                                                if(ptr == NULL)
+                                                {
+                                                    errors++;
+                                                    printf("Line %d: Function %s already defined.\n",(yylsp[-1]).first_line, (yyvsp[0].str));
+                                                    break;
+                                                }
                                                 strcpy(currentfunction, (yyvsp[0].str));
-                                            }
-#line 1424 "source.tab.c"
-    break;
-
-  case 12: /* $@5: %empty  */
-#line 107 "source.y"
-                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[-3]).first_line);}
-#line 1430 "source.tab.c"
-    break;
-
-  case 13: /* $@6: %empty  */
-#line 109 "source.y"
-                                            {
-                                                
-                                            }
-#line 1438 "source.tab.c"
-    break;
-
-  case 14: /* function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'  */
-#line 113 "source.y"
-                                            {
-                                                
-                                                genCode(DEC_SCOPE, "", 0, -1, (yylsp[-10]).first_line);
-                                                genCode(RET, "", 0, -1, (yylsp[-10]).first_line);
-                                                if(strcmp(currentfunction, "main")==0)
-                                                    genCode(HALT, "", 0, -1, (yylsp[-10]).first_line);
                                             }
 #line 1450 "source.tab.c"
     break;
 
-  case 16: /* parameter_list: type T_IDENTIFIER parameter_list_tail  */
-#line 123 "source.y"
-                                                    {genCode(DECL, (yyvsp[-1].str), 0, 0, (yylsp[-2]).first_line); genCode(STORE, (yyvsp[-1].str), 0, 0, (yylsp[-2]).first_line); }
+  case 12: /* $@5: %empty  */
+#line 124 "source.y"
+                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[-3]).first_line); increaseScope();}
 #line 1456 "source.tab.c"
     break;
 
+  case 13: /* $@6: %empty  */
+#line 126 "source.y"
+                                            {
+                                                
+                                            }
+#line 1464 "source.tab.c"
+    break;
+
+  case 14: /* function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'  */
+#line 130 "source.y"
+                                            {
+                                                
+                                                genCode(DEC_SCOPE, "", 0, -1, (yylsp[-10]).first_line);
+                                                decreaseScope();
+                                                genCode(RET, "", 0, -1, (yylsp[-10]).first_line);
+                                                if(strcmp(currentfunction, "main")==0)
+                                                    genCode(HALT, "", 0, -1, (yylsp[-10]).first_line);
+                                            }
+#line 1477 "source.tab.c"
+    break;
+
+  case 16: /* parameter_list: type T_IDENTIFIER parameter_list_tail  */
+#line 141 "source.y"
+                                                    {
+                                                        genCode(DECL, (yyvsp[-1].str), 0, 0, (yylsp[-2]).first_line); 
+                                                        genCode(STORE, (yyvsp[-1].str), 0, 0, (yylsp[-2]).first_line); 
+                                                        varRecord* ptr = addVar((yyvsp[-1].str), currentType);
+                                                        if(ptr == NULL) 
+                                                        {
+                                                            printf("line %d: Previous declaration of variable %s\n", (yylsp[-2]).first_line, (yyvsp[-1].str)); 
+                                                            errors++;
+                                                            break;
+                                                        }
+                                                    }
+#line 1493 "source.tab.c"
+    break;
+
   case 18: /* parameter_list_tail: ',' type T_IDENTIFIER parameter_list_tail  */
-#line 127 "source.y"
-                                                {genCode(DECL, (yyvsp[-1].str), 0, 0, (yylsp[-3]).first_line); genCode(STORE, (yyvsp[-1].str), 0, 0, (yylsp[-3]).first_line); }
-#line 1462 "source.tab.c"
+#line 155 "source.y"
+                                                {
+                                                    genCode(DECL, (yyvsp[-1].str), 0, 0, (yylsp[-3]).first_line); 
+                                                    genCode(STORE, (yyvsp[-1].str), 0, 0, (yylsp[-3]).first_line); 
+                                                    varRecord* ptr = addVar((yyvsp[-1].str), currentType);
+                                                    if(ptr == NULL) 
+                                                    {
+                                                        printf("line %d: Previous declaration of variable %s\n", (yylsp[-3]).first_line, (yyvsp[-1].str)); 
+                                                        errors++;
+                                                        break;
+                                                    }
+                                                }
+#line 1509 "source.tab.c"
     break;
 
   case 19: /* midrule_lbs: %empty  */
-#line 131 "source.y"
+#line 169 "source.y"
                                                 { (yyval.lbVal) = (struct lbs*) newLbRec(); (yyval.lbVal)->forGoto = reserveLoc(); }
-#line 1468 "source.tab.c"
+#line 1515 "source.tab.c"
     break;
 
   case 20: /* function_call: T_IDENTIFIER midrule_lbs '(' argument_list ')'  */
-#line 137 "source.y"
+#line 175 "source.y"
                                                 {
                                                     functionRecord* ptr = getFunction((yyvsp[-4].str));
                                                     if(ptr == NULL)
@@ -1480,11 +1527,11 @@ yyreduce:
                                                     genCode(GOTO, "", getFunction((yyvsp[-4].str))->functionIndex, 1, (yylsp[-4]).first_line);
                                                     backPatch((yyvsp[-3].lbVal)->forGoto, DATA, "", getCurrentIndex(), 1, (yylsp[-4]).first_line);
                                                 }
-#line 1484 "source.tab.c"
+#line 1531 "source.tab.c"
     break;
 
   case 27: /* $@7: %empty  */
-#line 161 "source.y"
+#line 199 "source.y"
                                             {
                                                 (yyvsp[-3].lbVal) = (struct lbs*) newLbRec();
                                                 (yyvsp[-3].lbVal)->forJmpFalse = reserveLoc();
@@ -1500,68 +1547,68 @@ yyreduce:
                                                 //     shouldExecute = 0;
                                                 // }
                                             }
-#line 1504 "source.tab.c"
+#line 1551 "source.tab.c"
     break;
 
   case 28: /* $@8: %empty  */
-#line 177 "source.y"
+#line 215 "source.y"
                                             {  }
-#line 1510 "source.tab.c"
+#line 1557 "source.tab.c"
     break;
 
   case 29: /* $@9: %empty  */
-#line 178 "source.y"
+#line 216 "source.y"
                                             {(yyvsp[-9].lbVal)->forGoto = reserveLoc();backPatch((yyvsp[-9].lbVal)->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, (yylsp[-9]).first_line); }
-#line 1516 "source.tab.c"
+#line 1563 "source.tab.c"
     break;
 
   case 30: /* $@10: %empty  */
-#line 180 "source.y"
+#line 218 "source.y"
                                             { backPatch((yyvsp[-13].lbVal)->forGoto, GOTO, "", getCurrentIndex(), 1, (yylsp[-13]).first_line);}
-#line 1522 "source.tab.c"
+#line 1569 "source.tab.c"
     break;
 
   case 32: /* $@11: %empty  */
-#line 182 "source.y"
+#line 220 "source.y"
                                             {
                                                 (yyvsp[0].lbVal) = (struct lbs*) newLbRec();
                                                 (yyvsp[0].lbVal)->forGoto = getCurrentIndex();
                                             }
-#line 1531 "source.tab.c"
+#line 1578 "source.tab.c"
     break;
 
   case 33: /* $@12: %empty  */
-#line 187 "source.y"
+#line 225 "source.y"
                                             {(yyvsp[-4].lbVal)->forJmpFalse = reserveLoc();}
-#line 1537 "source.tab.c"
+#line 1584 "source.tab.c"
     break;
 
   case 34: /* $@13: %empty  */
-#line 188 "source.y"
-                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[-6]).first_line);}
-#line 1543 "source.tab.c"
+#line 226 "source.y"
+                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[-6]).first_line); increaseScope();}
+#line 1590 "source.tab.c"
     break;
 
   case 35: /* $@14: %empty  */
-#line 190 "source.y"
-                                            {genCode(DEC_SCOPE, "", 0, -1, (yylsp[-9]).first_line); genCode(GOTO, "", (yyvsp[-9].lbVal)->forGoto, 1, (yylsp[-9]).first_line); backPatch((yyvsp[-9].lbVal)->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, (yylsp[-9]).first_line);}
-#line 1549 "source.tab.c"
+#line 228 "source.y"
+                                            {genCode(DEC_SCOPE, "", 0, -1, (yylsp[-9]).first_line); decreaseScope(); genCode(GOTO, "", (yyvsp[-9].lbVal)->forGoto, 1, (yylsp[-9]).first_line); backPatch((yyvsp[-9].lbVal)->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, (yylsp[-9]).first_line);}
+#line 1596 "source.tab.c"
     break;
 
   case 37: /* $@15: %empty  */
-#line 192 "source.y"
-                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[0]).first_line);}
-#line 1555 "source.tab.c"
+#line 230 "source.y"
+                                            {genCode(INC_SCOPE, "", 0, -1, (yylsp[0]).first_line); increaseScope();}
+#line 1602 "source.tab.c"
     break;
 
   case 38: /* $@16: %empty  */
-#line 194 "source.y"
-                                            {genCode(DEC_SCOPE, "", 0, -1, (yylsp[-3]).first_line);}
-#line 1561 "source.tab.c"
+#line 232 "source.y"
+                                            {genCode(DEC_SCOPE, "", 0, -1, (yylsp[-3]).first_line); decreaseScope(); }
+#line 1608 "source.tab.c"
     break;
 
   case 46: /* instruction: T_PRINTF_SIMPLE  */
-#line 204 "source.y"
+#line 242 "source.y"
                                             {
                                                 genCode(PRINTF, (yyvsp[0].str), 0, 3, (yylsp[0]).first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
@@ -1579,381 +1626,433 @@ yyreduce:
                                                 //     printf("%c", buffer[i]);
                                                 // }
                                             }
-#line 1583 "source.tab.c"
+#line 1630 "source.tab.c"
     break;
 
   case 47: /* instruction: T_PRINTF_PARAM  */
-#line 221 "source.y"
+#line 259 "source.y"
                                             {
-                                                genCode(PRINTF, (yyvsp[0].str), 1, 2, (yylsp[0]).first_line);
+                                                genCode(PRINTF, strdup((yyvsp[0].str)), 1, 2, (yylsp[0]).first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
-                                                // char buffer[1024];
-                                                // char varName[1024] = "";
-                                                // strcpy(buffer, $1 + strlen("printf(\""));  // eliminare printf(" de la inceput
-                                                // char* p = strchr(buffer, '\"');
-                                                // p+=2;                           //eliminare ",
-                                                // int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
-                                                // for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
-                                                // {
-                                                //     if(buffer[i] == '%')
-                                                //     {
-                                                //         varRecord* ptr = NULL;
-                                                //         while(p[0] == ' ') p++;
-                                                //         i++;
-                                                //         int j = 0;
-                                                //         strcpy(varName, "");
-                                                //         switch(buffer[i])
-                                                //         {
-                                                //             case 'd':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
+                                                char buffer[1024];
+                                                char varName[1024] = "";
+                                                strcpy(buffer, (yyvsp[0].str) + strlen("printf(\""));  // eliminare printf(" de la inceput
+                                                char* p = strrchr(buffer, '\"');
+                                                p+=2;                           //eliminare ",
+                                                int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
+                                                int j;
+                                                for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
+                                                {
+                                                    if(buffer[i] == '%')
+                                                    {
+                                                        varRecord* ptr = NULL;
+                                                        while(p[0] == ' ') p++;
+                                                        i++;
+                                                        
+                                                        switch(buffer[i])
+                                                        {
+                                                            case 'd':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                varName[j] = '\0';
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", (yylsp[0]).first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_integer)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", (yylsp[0]).first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                            break;
+                                                            case 'f':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                varName[j] = '\0';
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", (yylsp[0]).first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_float)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", (yylsp[0]).first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            case 'l':
+                                                                i++;
+                                                                if(buffer[i] != 'f')
+                                                                {
+                                                                    errors++;
+                                                                    printf("line %d: Symbol not recognized by %% \n", (yylsp[0]).first_line);
+                                                                    break;
+                                                                }
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                varName[j] = '\0';
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", (yylsp[0]).first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_double)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", (yylsp[0]).first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            default:
+                                                            printf("line %d: Symbol not recognized by %% \n", (yylsp[0]).first_line);
+                                                            errors++;
+                                                            break;
+                                                        }
+                                                        j=0;
+                                                        p++;
+                                                        continue;
 
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 printf("%d",(int)getVar(varName)->value);
-                                                //             break;
-                                                //             case 'f':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 printf("%f", (float)getVar(varName)->value);
-                                                //                 break;
-                                                //             case 'l':
-                                                //                 i++;
-                                                //                 if(buffer[i] != 'f')
-                                                //                 {
-                                                //                     errors++;
-                                                //                     printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //                     break;
-                                                //                 }
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 printf("%lf", getVar(varName)->value);
-                                                //                 break;
-                                                //             default:
-                                                //             printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //             errors++;
-                                                //             break;
-                                                //         }
-
-
-                                                //         p++;
-                                                //         continue;
-
-                                                //     }
-                                                //     if(buffer[i] == '\\')
-                                                //     {
-                                                //         i++;
-                                                //         handleBackSlashForBuffer(buffer[i]);
-                                                //         continue;
-                                                //     }
-                                                //     printf("%c", buffer[i]);
-                                                // }
+                                                    }
+                                                    if(buffer[i] == '\\')
+                                                    {
+                                                        i++;
+                                                        handleBackSlashForBuffer(buffer[i]);
+                                                        continue;
+                                                    }
+                                                }
                                             }
-#line 1681 "source.tab.c"
+#line 1743 "source.tab.c"
     break;
 
   case 48: /* instruction: T_SCANF  */
-#line 314 "source.y"
+#line 367 "source.y"
                                             {
-                                                genCode(SCANF, (yyvsp[0].str), 0, 0, (yylsp[0]).first_line);
+                                                genCode(SCANF, strdup((yyvsp[0].str)), 0, 0, (yylsp[0]).first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
-                                                // char buffer[1024];
-                                                // double val=0;
-                                                // char varName[1024] = "";
-                                                // strcpy(buffer, $1 + strlen("scanf(\""));  // eliminare scnaf(" de la inceput
-                                                // char* p = strchr(buffer, '\"');
-                                                // p+=2;                           //eliminare ",
-                                                // int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
-                                                // for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
-                                                // {
-                                                //     if(buffer[i] == '%')
-                                                //     {
-                                                //         while(p[0] == ' ') p++;
-                                                //         i++;
-                                                //         int j = 0;
-                                                //         strcpy(varName, "");
-                                                //         if(p[0] != '&')
-                                                //         {
-                                                //             errors++;
-                                                //             printf("line %d: & not used, could not read value\n", @1.first_line);
-                                                //         }
-                                                //         p++;
-                                                //         varRecord* ptr = NULL;
-                                                //         switch(buffer[i])
-                                                //         {
-                                                //             case 'd':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 scanf("%lf", &val);
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 ptr->value = (int)val;
-                                                //             break;
-                                                //             case 'f':
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 scanf("%lf", &val);
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 ptr->value = (float)val;
-                                                //                 break;
-                                                //             case 'l':
-                                                //                 i++;
-                                                //                 if(buffer[i] != 'f')
-                                                //                 {
-                                                //                     errors++;
-                                                //                     printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //                     break;
-                                                //                 }
-                                                //                 while(p[0] != ',' && p[0] != ')')
-                                                //                 {
-                                                //                     varName[j++] = p[0];
-                                                //                     p++;
-                                                //                 }
-                                                //                 scanf("%lf", &val);
-                                                //                 ptr = getVar(varName);
-                                                //                 if(ptr == 0)
-                                                //                 {
-                                                //                     printf("line %d: Identifier %s not declared.\n", @1.first_line, varName); 
-                                                //                     errors++;
-                                                //                     break;
-                                                //                 }
-                                                //                 ptr->value = (double)val;
-                                                //                 break;
-                                                //             default:
-                                                //             printf("line %d: Symbol not recognized by %% \n", @1.first_line);
-                                                //             errors++;
-                                                //             break;
-                                                //         }
-                                                //         p++;
-                                                //         continue;
-                                                //     } else if (buffer[0] == ' ') {continue;}
-                                                //     else
-                                                //     {
-                                                //         errors++;
-                                                //         printf("line %d: Character not recognized by scnaf, please only use %%\n", @1.first_line);
-                                                //     }
-                                                // }
+                                                char buffer[1024];
+                                                double val=0;
+                                                char varName[1024] = "";
+                                                strcpy(buffer, (yyvsp[0].str) + strlen("scanf(\""));  // eliminare scnaf(" de la inceput
+                                                char* p = strrchr(buffer, '\"');
+                                                p+=2;                           //eliminare ",
+                                                int formatSize = strlen(buffer) - strlen(p) - 2;     //-2 pentru ca am facut p += 2
+                                                for(int i = 0; i < formatSize && buffer[i] != '\"' && errors == 0; i++)
+                                                {
+                                                    if(buffer[i] == '%')
+                                                    {
+                                                        while(p[0] == ' ') p++;
+                                                        i++;
+                                                        int j = 0;
+                                                        strcpy(varName, "");
+                                                        if(p[0] != '&')
+                                                        {
+                                                            errors++;
+                                                            printf("line %d: & not used, could not read value\n", (yylsp[0]).first_line);
+                                                        }
+                                                        p++;
+                                                        varRecord* ptr = NULL;
+                                                        switch(buffer[i])
+                                                        {
+                                                            case 'd':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", (yylsp[0]).first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_integer)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", (yylsp[0]).first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                            break;
+                                                            case 'f':
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", (yylsp[0]).first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_float)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", (yylsp[0]).first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            case 'l':
+                                                                i++;
+                                                                if(buffer[i] != 'f')
+                                                                {
+                                                                    errors++;
+                                                                    printf("line %d: Symbol not recognized by %% \n", (yylsp[0]).first_line);
+                                                                    break;
+                                                                }
+                                                                while(p[0] != ',' && p[0] != ')')
+                                                                {
+                                                                    varName[j++] = p[0];
+                                                                    p++;
+                                                                }
+                                                                ptr = getVar(varName);
+                                                                if(ptr == 0)
+                                                                {
+                                                                    printf("line %d: Identifier %s not declared.\n", (yylsp[0]).first_line, varName); 
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                if(ptr->type != t_double)
+                                                                {
+                                                                    printf("Line %d: Identifier %s has wrong type.\n", (yylsp[0]).first_line, varName);
+                                                                    errors++;
+                                                                    break;
+                                                                }
+                                                                break;
+                                                            default:
+                                                            printf("line %d: Symbol not recognized by %% \n", (yylsp[0]).first_line);
+                                                            errors++;
+                                                            break;
+                                                        }
+                                                        p++;
+                                                        continue;
+                                                    } else if (buffer[0] == ' ') {continue;}
+                                                    else
+                                                    {
+                                                        errors++;
+                                                        printf("line %d: Character not recognized by scnaf, please only use %%\n", (yylsp[0]).first_line);
+                                                    }
+                                                }
                                                 
                                             }
-#line 1784 "source.tab.c"
+#line 1858 "source.tab.c"
     break;
 
   case 52: /* type: T_INT_KW  */
-#line 425 "source.y"
+#line 490 "source.y"
                                             { currentType = t_integer; }
-#line 1790 "source.tab.c"
+#line 1864 "source.tab.c"
     break;
 
   case 53: /* type: T_DOUBLE_KW  */
-#line 426 "source.y"
+#line 491 "source.y"
                                             { currentType = t_double; }
-#line 1796 "source.tab.c"
+#line 1870 "source.tab.c"
     break;
 
   case 54: /* type: T_FLOAT_KW  */
-#line 427 "source.y"
+#line 492 "source.y"
                                             { currentType = t_float; }
-#line 1802 "source.tab.c"
+#line 1876 "source.tab.c"
     break;
 
   case 57: /* variable_declaration: T_IDENTIFIER  */
-#line 436 "source.y"
+#line 501 "source.y"
                                             { 
                                                 genCode(DECL, (yyvsp[0].str), currentType, 2, (yylsp[0]).first_line);
-                                                // varRecord* ptr = addVar($1, currentType);  
-                                                // if(ptr == NULL) 
-                                                // {
-                                                //     printf("line %d: Previous declaration of variable %s\n", @1.first_line, $1); 
-                                                //     errors++;
-                                                // }
+                                                varRecord* ptr = addVar((yyvsp[0].str), currentType);  
+                                                if(ptr == NULL) 
+                                                {
+                                                    printf("line %d: Previous declaration of variable %s\n", (yylsp[0]).first_line, (yyvsp[0].str)); 
+                                                    errors++;
+                                                }
                                             }
-#line 1816 "source.tab.c"
+#line 1890 "source.tab.c"
     break;
 
   case 58: /* variable_declaration: T_IDENTIFIER '=' expression  */
-#line 445 "source.y"
+#line 510 "source.y"
                                          {
                                             genCode(DECL, (yyvsp[-2].str), currentType, 2, (yylsp[-2]).first_line);
                                             genCode(STORE, (yyvsp[-2].str), 0, 0, (yylsp[-2]).first_line);
-                                            // varRecord* ptr = addVar($1, currentType);
-                                            // if(ptr == NULL) 
-                                            // {
-                                            //     printf("line %d: Previous declaration of variable %s\n", @1.first_line, $1); 
-                                            //     errors++;
-                                            //     break;
-                                            // }
+                                            varRecord* ptr = addVar((yyvsp[-2].str), currentType);
+                                            if(ptr == NULL) 
+                                            {
+                                                printf("line %d: Previous declaration of variable %s\n", (yylsp[-2]).first_line, (yyvsp[-2].str)); 
+                                                errors++;
+                                                break;
+                                            }
                                             // ptr->value = $3;
                                         }
-#line 1833 "source.tab.c"
+#line 1907 "source.tab.c"
     break;
 
   case 59: /* variable_load: T_IDENTIFIER '=' expression  */
-#line 460 "source.y"
+#line 525 "source.y"
                                         {
                                             genCode(STORE, (yyvsp[-2].str), 0, 0, (yylsp[-2]).first_line);
-                                            // if (shouldExecute == 0) break; 
-                                            // varRecord* ptr = getVar($1);
-                                            // if(ptr == NULL)
-                                            // {
-                                            //     printf("Line %d: Identifier %s not declared.\n", @1.first_line, $1);
-                                            //     errors++;
-                                            //     break;
-                                            // }
+                                            if (shouldExecute == 0) break; 
+                                            varRecord* ptr = getVar((yyvsp[-2].str));
+                                            if(ptr == NULL)
+                                            {
+                                                printf("Line %d: Identifier %s not declared.\n", (yylsp[-2]).first_line, (yyvsp[-2].str));
+                                                errors++;
+                                                break;
+                                            }
                                             // ptr->value = $3;
                                         }
-#line 1850 "source.tab.c"
+#line 1924 "source.tab.c"
     break;
 
   case 60: /* expression: T_IDENTIFIER  */
-#line 474 "source.y"
+#line 539 "source.y"
                                         {
-                                            genCode(DATA, (yyvsp[0].str), 0, 0, (yylsp[0]).first_line);
+                                            
                                             // if (shouldExecute == 0) break;  
-                                            // varRecord* ptr = getVar($1);
-                                            // if(ptr == NULL)
-                                            // {
-                                            //     printf("Line %d: Idendifier %s not declared.\n", @1.first_line, $1);
-                                            //     errors++;
-                                            //     break;
-                                            // }
-                                            // $$ = ptr->value;
+                                            varRecord* ptr = getVar((yyvsp[0].str));
+                                            if(ptr == NULL)
+                                            {
+                                                printf("Line %d: Idendifier %s not declared.\n", (yylsp[0]).first_line, (yyvsp[0].str));
+                                                errors++;
+                                                break;
+                                            }
+                                            genCode(DATA, (yyvsp[0].str), ptr->type, 0, (yylsp[0]).first_line);
+
                                         }
-#line 1867 "source.tab.c"
+#line 1942 "source.tab.c"
     break;
 
   case 61: /* expression: T_DOUBLE_VAL  */
-#line 486 "source.y"
-                                            {genCode(DATA, "", (yyvsp[0].dval), 1, (yylsp[0]).first_line);}
-#line 1873 "source.tab.c"
+#line 552 "source.y"
+                                            {genCode(DATA, "double", (yyvsp[0].dval), 1, (yylsp[0]).first_line);}
+#line 1948 "source.tab.c"
     break;
 
   case 62: /* expression: T_INTEGER_VAL  */
-#line 487 "source.y"
-                                            {genCode(DATA, "", (double)(yyvsp[0].intval), 1, (yylsp[0]).first_line);}
-#line 1879 "source.tab.c"
+#line 553 "source.y"
+                                            {genCode(DATA, "int", (double)(yyvsp[0].intval), 1, (yylsp[0]).first_line);}
+#line 1954 "source.tab.c"
     break;
 
-  case 63: /* expression: expression '+' expression  */
-#line 488 "source.y"
+  case 63: /* expression: T_FLOAT_VAL  */
+#line 554 "source.y"
+                                            {genCode(DATA, "float", (double)(yyvsp[0].fval), 1, (yylsp[0]).first_line);}
+#line 1960 "source.tab.c"
+    break;
+
+  case 64: /* expression: T_INT_CAST expression  */
+#line 555 "source.y"
+                                            {genCode(CAST, varTypeName[t_integer], t_integer, 0, (yylsp[-1]).first_line);}
+#line 1966 "source.tab.c"
+    break;
+
+  case 65: /* expression: T_FLOAT_CAST expression  */
+#line 556 "source.y"
+                                            {genCode(CAST, varTypeName[t_float], t_float, 0, (yylsp[-1]).first_line);}
+#line 1972 "source.tab.c"
+    break;
+
+  case 66: /* expression: T_DOUBLE_CAST expression  */
+#line 557 "source.y"
+                                            {genCode(CAST, varTypeName[t_double], t_double, 0, (yylsp[-1]).first_line);}
+#line 1978 "source.tab.c"
+    break;
+
+  case 67: /* expression: expression '+' expression  */
+#line 558 "source.y"
                                             {genCode(ADD, "", 0, -1, (yylsp[-2]).first_line);  (yyval.dval) = (yyvsp[-2].dval) + (yyvsp[0].dval);}
-#line 1885 "source.tab.c"
+#line 1984 "source.tab.c"
     break;
 
-  case 64: /* expression: expression '-' expression  */
-#line 489 "source.y"
+  case 68: /* expression: expression '-' expression  */
+#line 559 "source.y"
                                             {genCode(SUB, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) - (yyvsp[0].dval);}
-#line 1891 "source.tab.c"
+#line 1990 "source.tab.c"
     break;
 
-  case 65: /* expression: expression '*' expression  */
-#line 490 "source.y"
+  case 69: /* expression: expression '*' expression  */
+#line 560 "source.y"
                                             {genCode(MUL, "", 0, -1, (yylsp[-2]).first_line);  (yyval.dval) = (yyvsp[-2].dval) * (yyvsp[0].dval);}
-#line 1897 "source.tab.c"
+#line 1996 "source.tab.c"
     break;
 
-  case 66: /* expression: expression '/' expression  */
-#line 491 "source.y"
+  case 70: /* expression: expression '/' expression  */
+#line 561 "source.y"
                                             {genCode(DIV, "", 0, -1, (yylsp[-2]).first_line);}
-#line 1903 "source.tab.c"
+#line 2002 "source.tab.c"
     break;
 
-  case 67: /* expression: expression '<' expression  */
-#line 492 "source.y"
+  case 71: /* expression: expression '<' expression  */
+#line 562 "source.y"
                                             {genCode(LT, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) < (yyvsp[0].dval);}
-#line 1909 "source.tab.c"
+#line 2008 "source.tab.c"
     break;
 
-  case 68: /* expression: expression T_LE expression  */
-#line 493 "source.y"
+  case 72: /* expression: expression T_LE expression  */
+#line 563 "source.y"
                                             {genCode(LE, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) <= (yyvsp[0].dval);}
-#line 1915 "source.tab.c"
+#line 2014 "source.tab.c"
     break;
 
-  case 69: /* expression: expression '>' expression  */
-#line 494 "source.y"
+  case 73: /* expression: expression '>' expression  */
+#line 564 "source.y"
                                             {genCode(GT, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) > (yyvsp[0].dval);}
-#line 1921 "source.tab.c"
+#line 2020 "source.tab.c"
     break;
 
-  case 70: /* expression: expression T_GE expression  */
-#line 495 "source.y"
+  case 74: /* expression: expression T_GE expression  */
+#line 565 "source.y"
                                             {genCode(GE, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) >= (yyvsp[0].dval);}
-#line 1927 "source.tab.c"
+#line 2026 "source.tab.c"
     break;
 
-  case 71: /* expression: expression T_EQ expression  */
-#line 496 "source.y"
+  case 75: /* expression: expression T_EQ expression  */
+#line 566 "source.y"
                                             {genCode(EQ, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) == (yyvsp[0].dval);}
-#line 1933 "source.tab.c"
+#line 2032 "source.tab.c"
     break;
 
-  case 72: /* expression: expression T_NEQ expression  */
-#line 497 "source.y"
+  case 76: /* expression: expression T_NEQ expression  */
+#line 567 "source.y"
                                             {genCode(NEQ, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) != (yyvsp[0].dval);}
-#line 1939 "source.tab.c"
+#line 2038 "source.tab.c"
     break;
 
-  case 73: /* expression: '(' expression ')'  */
-#line 498 "source.y"
+  case 77: /* expression: '(' expression ')'  */
+#line 568 "source.y"
                                             {if (shouldExecute == 0) break; (yyval.dval) = (yyvsp[-1].dval);}
-#line 1945 "source.tab.c"
+#line 2044 "source.tab.c"
     break;
 
-  case 74: /* expression: function_call  */
-#line 499 "source.y"
+  case 78: /* expression: function_call  */
+#line 569 "source.y"
                                             {
                                                 
                                             }
-#line 1953 "source.tab.c"
+#line 2052 "source.tab.c"
     break;
 
 
-#line 1957 "source.tab.c"
+#line 2056 "source.tab.c"
 
       default: break;
     }
@@ -2151,7 +2250,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 504 "source.y"
+#line 574 "source.y"
 
 
 /**********************************
@@ -2160,6 +2259,7 @@ yyreturnlab:
 
 int main(int argc, char** argv)
 {   
+    currentState = parsing;
     if (argc == 2) {
         yyin = fopen(argv[1], "r");
         if (!yyin) {
@@ -2168,6 +2268,7 @@ int main(int argc, char** argv)
         }
     }
     yyparse();
+    currentState = executing;
     printf("Parsing ended.\n");
     if(DEBUGGER)
     {
@@ -2186,6 +2287,7 @@ int main(int argc, char** argv)
         //printf("IfCount= %d\n", ifCount);
         printAllVars();
     }
+    
     return 0;
 }
 
