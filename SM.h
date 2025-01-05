@@ -135,6 +135,12 @@ void fetchExecuteCycle()
             }
             break;
         case STORE:
+            if (top < 0)
+            {
+                printf("Line %d: ERROR: stack index is below 0\n", ir.currentLine);
+                ir.opCode = HALT;
+                break;
+            }
             ptr = getVar(ir.buffer);
             if (ptr == NULL)
             {
@@ -364,6 +370,11 @@ void fetchExecuteCycle()
         case RET:
             if (top == -1)
             {
+                break;
+            }
+            if (strcmp(ir.buffer, "void") == 0)
+            {
+                pc = stack[top--];
                 break;
             }
             ir.value = stack[top - 1];

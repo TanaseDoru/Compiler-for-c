@@ -1,5 +1,16 @@
+void lala()
+{
+    printf("Call from function\n");
+}
+
 int main()
 {
-    int a = sum(2, 1);
-    printf("a = %d\n", a);
+    int a; // Comentariu
+    lala();
+    printf("a=%d\n", a);
+}
+
+int lol()
+{
+    return 12;
 }

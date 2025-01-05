@@ -1,5 +1,5 @@
 %{
-    #define DEBUGGER 1
+    #define DEBUGGER 1      // 0 - no debugger, 1 - print instructions and variables; 2 - print every instruction executed 3 - also how stack
     
     #include <stdio.h>
     #include <stdlib.h>
@@ -16,8 +16,6 @@
     int yylex();
     int yyerror(const char *msg);
     extern int lineNo;
-
-    
 
     char currentfunction[256];
 
@@ -49,6 +47,7 @@
 %token T_ELSE_KW
 %token T_VOID_KW
 %token T_RETURN
+%token T_COMM
 %token T_ERROR
 %token <str> T_PRINTF_PARAM
 %token <str> T_PRINTF_SIMPLE
@@ -69,7 +68,7 @@
 %%
 
 program:
-    functions function_declaration
+    function_declaration functions
     // T_INT_KW T_MAIN                         {entryPoint = getCurrentIndex();}
     // '(' ')' '{' instructions 
     // '}'                                     {genCode(HALT, "", 0, -1, @1.first_line);}
@@ -79,8 +78,27 @@ program:
 
 functions:
     | functions function_declaration
-function_declaration:                 
-    type T_IDENTIFIER                       {
+function_declaration:  
+    T_VOID_KW T_IDENTIFIER                       {
+                                                if(strcmp($2, "main") == 0) 
+                                                    entryPoint = getCurrentIndex(); 
+                                                addFunction($2, getCurrentIndex())->type = currentType; 
+                                                strcpy(currentfunction, $2);
+                                            }
+    '('                                     {genCode(INC_SCOPE, "", 0, -1, @1.first_line);}
+    parameter_list ')'                  
+    '{'                                     {
+                                                
+                                            }
+     instructions 
+     '}'                                    {
+                                                
+                                                genCode(DEC_SCOPE, "", 0, -1, @1.first_line);
+                                                genCode(RET, "void", 0, 0, @1.first_line);
+                                                if(strcmp(currentfunction, "main")==0)
+                                                    genCode(HALT, "", 0, -1, @1.first_line);
+                                            }
+    | type T_IDENTIFIER                       {
                                                 if(strcmp($2, "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
                                                 addFunction($2, getCurrentIndex())->type = currentType; 
@@ -120,7 +138,7 @@ function_call:
                                                     functionRecord* ptr = getFunction($1);
                                                     if(ptr == NULL)
                                                     {
-                                                        printf("Line %d: Function not found\n", @1.first_line);
+                                                        printf("Line %d: Function \"%s\" not found\n", @1.first_line, $1);
                                                         errors++;
                                                         break;
                                                     }
@@ -178,7 +196,9 @@ instructions:
     ;
 
 instruction:
-    | T_RETURN expression
+    | T_COMM
+    | function_call
+    | T_RETURN expression                   
     | declarations
     | variable_load
     | T_PRINTF_SIMPLE                       {
@@ -404,7 +424,7 @@ declaration:
 type:
     T_INT_KW                                { currentType = t_integer; }
     | T_DOUBLE_KW                           { currentType = t_double; }
-    | T_FLOAT_KW                            { currentType = t_double; }
+    | T_FLOAT_KW                            { currentType = t_float; }
     ;
 
 variable_list:
@@ -503,7 +523,12 @@ int main(int argc, char** argv)
         printAllInstructions();
     }
     printf("-------------------STARTING CODE SEQUENCE--------------------\n\n");
-    fetchExecuteCycle();
+    if(errors > 0)
+    {
+        printf("Code can not execute, detected %d errors.\n", errors);
+    }
+    else
+        fetchExecuteCycle();
     printf("\n\n------------------CODE ENDED-------------------\n");
     if(DEBUGGER)
     {

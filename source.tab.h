@@ -66,13 +66,14 @@ extern int yydebug;
     T_ELSE_KW = 267,               /* T_ELSE_KW  */
     T_VOID_KW = 268,               /* T_VOID_KW  */
     T_RETURN = 269,                /* T_RETURN  */
-    T_ERROR = 270,                 /* T_ERROR  */
-    T_PRINTF_PARAM = 271,          /* T_PRINTF_PARAM  */
-    T_PRINTF_SIMPLE = 272,         /* T_PRINTF_SIMPLE  */
-    T_SCANF = 273,                 /* T_SCANF  */
-    T_INTEGER_VAL = 274,           /* T_INTEGER_VAL  */
-    T_IDENTIFIER = 275,            /* T_IDENTIFIER  */
-    T_DOUBLE_VAL = 276             /* T_DOUBLE_VAL  */
+    T_COMM = 270,                  /* T_COMM  */
+    T_ERROR = 271,                 /* T_ERROR  */
+    T_PRINTF_PARAM = 272,          /* T_PRINTF_PARAM  */
+    T_PRINTF_SIMPLE = 273,         /* T_PRINTF_SIMPLE  */
+    T_SCANF = 274,                 /* T_SCANF  */
+    T_INTEGER_VAL = 275,           /* T_INTEGER_VAL  */
+    T_IDENTIFIER = 276,            /* T_IDENTIFIER  */
+    T_DOUBLE_VAL = 277             /* T_DOUBLE_VAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -81,10 +82,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 31 "source.y"
+#line 29 "source.y"
 int intval; char *str; double dval; struct lbs *lbVal;
 
-#line 88 "source.tab.h"
+#line 89 "source.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

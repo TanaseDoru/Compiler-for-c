@@ -16,6 +16,7 @@ enum varType
 {
     t_integer = 0,
     t_double,
+    t_float,
     t_void
 };
 
@@ -34,7 +35,7 @@ typedef struct varRecord varRecord;
 *****************************************/
 
 varRecord *(varScope[SCOPE_MAX_DEPTH]) = {NULL};
-int scopeLevel = 0;
+int scopeLevel = -1; // Scope level incepe la -1 pentru ca functiile fac IncreaseScope, ca si main
 
 /*****************************************
                 FUNCTIONS
@@ -52,8 +53,9 @@ int increaseScope()
 
 int decreaseScope()
 {
-    varScope[scopeLevel] = NULL;
-    if (scopeLevel == 0)
+    if (scopeLevel != 0)
+        varScope[scopeLevel] = NULL;
+    if (scopeLevel == -1)
     {
         printf("FATAL ERROR: SCOPE LEVEL IS BELOW 0\n");
         exit(-1);
@@ -95,6 +97,7 @@ void printAllVars()
     printf("\n***********************************\n");
     printf("\tPrinting variables\n");
     printf("***********************************\n\n");
+    scopeLevel++; // scopelevel-ul pentru main este 0
     for (varRecord *ptr = varScope[scopeLevel]; ptr != NULL; ptr = ptr->next)
     {
         if (ptr->type == t_integer)

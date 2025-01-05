@@ -21,11 +21,14 @@ DOUBLE      [0-9]+\.[0-9]+
 
 "if"                { return T_IF_KW; } 
 "else"              { return T_ELSE_KW; }
-"while"             { return T_WHILE_KW; }  // De implementat
+"while"             { return T_WHILE_KW; } 
 
 "printf(\""[[:print:]]+"\")"                        {yylval.str = strdup(yytext); return T_PRINTF_SIMPLE;}
 "printf(\""[[:print:]]+"\","[a-zA-Z&*_0-9, ]+")"    {yylloc.first_line = lineNo; yylval.str = strdup(yytext); return T_PRINTF_PARAM;}
 "scanf(\""[[:print:]]+"\", "[a-zA-Z&*_0-9, ]+")"    {yylloc.first_line = lineNo; yylval.str = strdup(yytext); return T_SCANF;}
+
+"//"[^\n]*                          ; //Comentariu pe o linie
+\/\*[^*]*\*+([^/*][^*]*\*+)*\/      ; // comentariu pe mai multe linii
 
 "=="                {return T_EQ; }
 "!="                {return T_NEQ; }
