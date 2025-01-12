@@ -1,0 +1,11 @@
+void func(int a)
+{
+    printf("Mesaj\n");
+}
+
+
+int main()
+{
+    int a;
+    func(a);
+}

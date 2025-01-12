@@ -73,6 +73,21 @@ int decreaseScope()
     return --scopeLevel;
 }
 
+varRecord *getVarByScope(char *varName, int scope)
+{
+    varRecord *ptr;
+    for (ptr = varScope[scope]; ptr != NULL; ptr = ptr->next)
+        if (strcmp(ptr->name, varName) == 0)
+        {
+            if (ptr->type == t_integer)
+                ptr->value = (int)ptr->value;
+            else if (ptr->type == t_float)
+                ptr->value = (float)ptr->value;
+            return ptr;
+        }
+    return NULL;
+}
+
 varRecord *getVar(char *varName)
 {
     varRecord *ptr;
@@ -95,7 +110,8 @@ varRecord *getVar(char *varName)
 
 varRecord *addVar(char *varName, enum varType type)
 {
-    if (getVar(varName) != (varRecord *)NULL)
+    printf("\n");
+    if (getVarByScope(varName, scopeLevel) != (varRecord *)NULL)
         return NULL;
     varRecord *ptr = (varRecord *)malloc(sizeof(varRecord));
     ptr->name = (char *)calloc(strlen(varName) + 1, sizeof(char));

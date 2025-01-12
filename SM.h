@@ -144,14 +144,29 @@ void fetchExecuteCycle()
                 if (strcmp("double", ir.buffer) == 0)
                 {
                     stack[top].type = t_double;
+                    if (stack[top].val > __DBL_MAX__ || stack[top].val < -__DBL_MAX__)
+                    {
+                        printf("Line %d: Range for double exceeded.\n", ir.currentLine);
+                        ir.opCode = HALT;
+                    }
                 }
                 else if (strcmp("int", ir.buffer) == 0)
                 {
                     stack[top].type = t_integer;
+                    if (stack[top].val > __INT_MAX__ || stack[top].val < -__INT_MAX__)
+                    {
+                        printf("Line %d: Range for int exceeded.\n", ir.currentLine);
+                        ir.opCode = HALT;
+                    }
                 }
                 else if (strcmp("float", ir.buffer) == 0)
                 {
                     stack[top].type = t_float;
+                    if (stack[top].val > __FLT_MAX__ || stack[top].val < -__FLT_MAX__)
+                    {
+                        printf("Line %d: Range for float exceeded.\n", ir.currentLine);
+                        ir.opCode = HALT;
+                    }
                 }
             }
             break;
@@ -175,6 +190,33 @@ void fetchExecuteCycle()
                 printf("Line %d: Different variable type used for %s.\n", ir.currentLine, ptr->name);
                 ir.opCode = HALT;
                 break;
+            }
+            if (ptr->type == t_double)
+            {
+                if (stack[top].val > __DBL_MAX__ || stack[top].val < -__DBL_MAX__)
+                {
+                    printf("Line %d: Range for double exceeded.\n", ir.currentLine);
+                    ir.opCode = HALT;
+                    break;
+                }
+            }
+            if (ptr->type == t_integer)
+            {
+                if (stack[top].val > __INT_MAX__ || stack[top].val < -__INT_MAX__)
+                {
+                    printf("Line %d: Range for integer exceeded.\n", ir.currentLine);
+                    ir.opCode = HALT;
+                    break;
+                }
+            }
+            if (ptr->type == t_double)
+            {
+                if (stack[top].val > __FLT_MAX__ || stack[top].val < -__FLT_MAX__)
+                {
+                    printf("Line %d: Range for float exceeded.\n", ir.currentLine);
+                    ir.opCode = HALT;
+                    break;
+                }
             }
             ptr->value = stack[top--].val;
             break;

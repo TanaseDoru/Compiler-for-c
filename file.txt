@@ -110,7 +110,7 @@ int main() {
     // Testarea functionalitatilor cerute
     /* Comentariu pe
     mai multe randuri */
-    //inputOutput();
+    inputOutput();
     conversiiDeTip();
     operatiiAritmetice();
     instructiuniDeControl();

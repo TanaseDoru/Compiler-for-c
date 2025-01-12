@@ -1,0 +1,3 @@
+https://www.admb-project.org/tools/flex/compiler.pdf
+
+ChatGpt -> folosit pentru rezolvare de erori

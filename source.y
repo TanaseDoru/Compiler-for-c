@@ -1,11 +1,10 @@
 %{
-    #define DEBUGGER 1      // 0 - no debugger, 1 - print instructions and variables; 2 - print every instruction executed 3 - also how stack
+    #define DEBUGGER 1      // 0 - no debugger, 1 - print instructions and variables; 2 - print every instruction executed 3 - also show stack
     
     #include <stdio.h>
     #include <stdlib.h>
     #include "CG.h"
     #include "SM.h"
-    #include "flowHeader.h"
     #include "utils.h"
     #include "functionHandler.h"
     #include "VTR.h"
@@ -524,7 +523,7 @@ variable_declaration:
 variable_load: 
     T_IDENTIFIER '=' expression         {
                                             genCode(STORE, $1, 0, 0, @1.first_line);
-                                            if (shouldExecute == 0) break; 
+                                            //if (shouldExecute == 0) break; 
                                             varRecord* ptr = getVar($1);
                                             if(ptr == NULL)
                                             {
@@ -565,7 +564,7 @@ expression: T_IDENTIFIER                {
     | expression T_GE expression            {genCode(GE, "", 0, -1, @1.first_line); $$ = $1 >= $3;}
     | expression T_EQ expression            {genCode(EQ, "", 0, -1, @1.first_line); $$ = $1 == $3;}
     | expression T_NEQ expression           {genCode(NEQ, "", 0, -1, @1.first_line); $$ = $1 != $3;}
-    | '(' expression ')'                    {if (shouldExecute == 0) break; $$ = $2;}
+    | '(' expression ')'                    {/*if (shouldExecute == 0) break;*/ $$ = $2;}
     | function_call                         {
                                                 
                                             }
@@ -580,12 +579,34 @@ expression: T_IDENTIFIER                {
 int main(int argc, char** argv)
 {   
     currentState = parsing;
+    char c;
+    char buffer[1024];
     if (argc == 2) {
         yyin = fopen(argv[1], "r");
         if (!yyin) {
             perror("Error opening file");
             return 1;
         }
+    }
+    else
+    {
+        printf("Doriti sa introduceti fisier de la tastatura? [y/n]\n");
+        scanf("%c", &c);
+    }
+    if(c == 'y')
+    {
+        printf("Introduceti numele fisierului: ");
+        scanf("%s", buffer);
+        yyin = fopen(buffer, "r");
+        if(!yyin)
+        {
+            perror("Error opening file");
+            return 1;
+        }
+    }
+    else if(argc == 1)
+    {
+        printf("Introduceti codul manual:\n");
     }
     yyparse();
     currentState = executing;

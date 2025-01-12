@@ -69,13 +69,12 @@
 /* First part of user prologue.  */
 #line 1 "source.y"
 
-    #define DEBUGGER 1      // 0 - no debugger, 1 - print instructions and variables; 2 - print every instruction executed 3 - also how stack
+    #define DEBUGGER 1      // 0 - no debugger, 1 - print instructions and variables; 2 - print every instruction executed 3 - also show stack
     
     #include <stdio.h>
     #include <stdlib.h>
     #include "CG.h"
     #include "SM.h"
-    #include "flowHeader.h"
     #include "utils.h"
     #include "functionHandler.h"
     #include "VTR.h"
@@ -92,7 +91,7 @@
 
     enum varType currentType;    
 
-#line 96 "source.tab.c"
+#line 95 "source.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -586,14 +585,14 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    74,    74,    78,    79,    82,    83,    85,    98,   100,
-      85,   112,   124,   126,   112,   140,   141,   154,   155,   169,
-     173,   189,   190,   193,   194,   197,   198,   199,   215,   216,
-     218,   199,   220,   225,   226,   228,   220,   230,   232,   230,
-     236,   237,   238,   239,   240,   241,   242,   259,   367,   481,
-     482,   486,   490,   491,   492,   496,   497,   501,   510,   525,
-     539,   552,   553,   554,   555,   556,   557,   558,   559,   560,
-     561,   562,   563,   564,   565,   566,   567,   568,   569
+       0,    73,    73,    77,    78,    81,    82,    84,    97,    99,
+      84,   111,   123,   125,   111,   139,   140,   153,   154,   168,
+     172,   188,   189,   192,   193,   196,   197,   198,   214,   215,
+     217,   198,   219,   224,   225,   227,   219,   229,   231,   229,
+     235,   236,   237,   238,   239,   240,   241,   258,   366,   480,
+     481,   485,   489,   490,   491,   495,   496,   500,   509,   524,
+     538,   551,   552,   553,   554,   555,   556,   557,   558,   559,
+     560,   561,   562,   563,   564,   565,   566,   567,   568
 };
 #endif
 
@@ -1382,13 +1381,13 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* program: T_ERROR  */
-#line 79 "source.y"
+#line 78 "source.y"
                                              {errors++;}
-#line 1388 "source.tab.c"
+#line 1387 "source.tab.c"
     break;
 
   case 7: /* $@1: %empty  */
-#line 85 "source.y"
+#line 84 "source.y"
                                                  {
                                                 if(strcmp((yyvsp[0].str), "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
@@ -1402,25 +1401,25 @@ yyreduce:
                                                 ptr->type = currentType; 
                                                 strcpy(currentfunction, (yyvsp[0].str));
                                             }
-#line 1406 "source.tab.c"
+#line 1405 "source.tab.c"
     break;
 
   case 8: /* $@2: %empty  */
-#line 98 "source.y"
+#line 97 "source.y"
                                             {genCode(INC_SCOPE, "", 0, -1, (yylsp[-3]).first_line); increaseScope();}
-#line 1412 "source.tab.c"
+#line 1411 "source.tab.c"
     break;
 
   case 9: /* $@3: %empty  */
-#line 100 "source.y"
+#line 99 "source.y"
                                             {
                                                 
                                             }
-#line 1420 "source.tab.c"
+#line 1419 "source.tab.c"
     break;
 
   case 10: /* function_declaration: T_VOID_KW T_IDENTIFIER $@1 '(' $@2 parameter_list ')' '{' $@3 instructions '}'  */
-#line 104 "source.y"
+#line 103 "source.y"
                                             {
                                                 
                                                 genCode(DEC_SCOPE, "", 0, -1, (yylsp[-10]).first_line);
@@ -1429,11 +1428,11 @@ yyreduce:
                                                 if(strcmp(currentfunction, "main")==0)
                                                     genCode(HALT, "", 0, -1, (yylsp[-10]).first_line);
                                             }
-#line 1433 "source.tab.c"
+#line 1432 "source.tab.c"
     break;
 
   case 11: /* $@4: %empty  */
-#line 112 "source.y"
+#line 111 "source.y"
                                               {
                                                 if(strcmp((yyvsp[0].str), "main") == 0) 
                                                     entryPoint = getCurrentIndex(); 
@@ -1446,25 +1445,25 @@ yyreduce:
                                                 }
                                                 strcpy(currentfunction, (yyvsp[0].str));
                                             }
-#line 1450 "source.tab.c"
+#line 1449 "source.tab.c"
     break;
 
   case 12: /* $@5: %empty  */
-#line 124 "source.y"
+#line 123 "source.y"
                                             {genCode(INC_SCOPE, "", 0, -1, (yylsp[-3]).first_line); increaseScope();}
-#line 1456 "source.tab.c"
+#line 1455 "source.tab.c"
     break;
 
   case 13: /* $@6: %empty  */
-#line 126 "source.y"
+#line 125 "source.y"
                                             {
                                                 
                                             }
-#line 1464 "source.tab.c"
+#line 1463 "source.tab.c"
     break;
 
   case 14: /* function_declaration: type T_IDENTIFIER $@4 '(' $@5 parameter_list ')' '{' $@6 instructions '}'  */
-#line 130 "source.y"
+#line 129 "source.y"
                                             {
                                                 
                                                 genCode(DEC_SCOPE, "", 0, -1, (yylsp[-10]).first_line);
@@ -1473,11 +1472,11 @@ yyreduce:
                                                 if(strcmp(currentfunction, "main")==0)
                                                     genCode(HALT, "", 0, -1, (yylsp[-10]).first_line);
                                             }
-#line 1477 "source.tab.c"
+#line 1476 "source.tab.c"
     break;
 
   case 16: /* parameter_list: type T_IDENTIFIER parameter_list_tail  */
-#line 141 "source.y"
+#line 140 "source.y"
                                                     {
                                                         genCode(DECL, (yyvsp[-1].str), 0, 0, (yylsp[-2]).first_line); 
                                                         genCode(STORE, (yyvsp[-1].str), 0, 0, (yylsp[-2]).first_line); 
@@ -1489,11 +1488,11 @@ yyreduce:
                                                             break;
                                                         }
                                                     }
-#line 1493 "source.tab.c"
+#line 1492 "source.tab.c"
     break;
 
   case 18: /* parameter_list_tail: ',' type T_IDENTIFIER parameter_list_tail  */
-#line 155 "source.y"
+#line 154 "source.y"
                                                 {
                                                     genCode(DECL, (yyvsp[-1].str), 0, 0, (yylsp[-3]).first_line); 
                                                     genCode(STORE, (yyvsp[-1].str), 0, 0, (yylsp[-3]).first_line); 
@@ -1505,17 +1504,17 @@ yyreduce:
                                                         break;
                                                     }
                                                 }
-#line 1509 "source.tab.c"
+#line 1508 "source.tab.c"
     break;
 
   case 19: /* midrule_lbs: %empty  */
-#line 169 "source.y"
+#line 168 "source.y"
                                                 { (yyval.lbVal) = (struct lbs*) newLbRec(); (yyval.lbVal)->forGoto = reserveLoc(); }
-#line 1515 "source.tab.c"
+#line 1514 "source.tab.c"
     break;
 
   case 20: /* function_call: T_IDENTIFIER midrule_lbs '(' argument_list ')'  */
-#line 175 "source.y"
+#line 174 "source.y"
                                                 {
                                                     functionRecord* ptr = getFunction((yyvsp[-4].str));
                                                     if(ptr == NULL)
@@ -1527,11 +1526,11 @@ yyreduce:
                                                     genCode(GOTO, "", getFunction((yyvsp[-4].str))->functionIndex, 1, (yylsp[-4]).first_line);
                                                     backPatch((yyvsp[-3].lbVal)->forGoto, DATA, "", getCurrentIndex(), 1, (yylsp[-4]).first_line);
                                                 }
-#line 1531 "source.tab.c"
+#line 1530 "source.tab.c"
     break;
 
   case 27: /* $@7: %empty  */
-#line 199 "source.y"
+#line 198 "source.y"
                                             {
                                                 (yyvsp[-3].lbVal) = (struct lbs*) newLbRec();
                                                 (yyvsp[-3].lbVal)->forJmpFalse = reserveLoc();
@@ -1547,68 +1546,68 @@ yyreduce:
                                                 //     shouldExecute = 0;
                                                 // }
                                             }
-#line 1551 "source.tab.c"
+#line 1550 "source.tab.c"
     break;
 
   case 28: /* $@8: %empty  */
-#line 215 "source.y"
+#line 214 "source.y"
                                             {  }
-#line 1557 "source.tab.c"
+#line 1556 "source.tab.c"
     break;
 
   case 29: /* $@9: %empty  */
-#line 216 "source.y"
+#line 215 "source.y"
                                             {(yyvsp[-9].lbVal)->forGoto = reserveLoc();backPatch((yyvsp[-9].lbVal)->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, (yylsp[-9]).first_line); }
-#line 1563 "source.tab.c"
+#line 1562 "source.tab.c"
     break;
 
   case 30: /* $@10: %empty  */
-#line 218 "source.y"
+#line 217 "source.y"
                                             { backPatch((yyvsp[-13].lbVal)->forGoto, GOTO, "", getCurrentIndex(), 1, (yylsp[-13]).first_line);}
-#line 1569 "source.tab.c"
+#line 1568 "source.tab.c"
     break;
 
   case 32: /* $@11: %empty  */
-#line 220 "source.y"
+#line 219 "source.y"
                                             {
                                                 (yyvsp[0].lbVal) = (struct lbs*) newLbRec();
                                                 (yyvsp[0].lbVal)->forGoto = getCurrentIndex();
                                             }
-#line 1578 "source.tab.c"
+#line 1577 "source.tab.c"
     break;
 
   case 33: /* $@12: %empty  */
-#line 225 "source.y"
+#line 224 "source.y"
                                             {(yyvsp[-4].lbVal)->forJmpFalse = reserveLoc();}
-#line 1584 "source.tab.c"
+#line 1583 "source.tab.c"
     break;
 
   case 34: /* $@13: %empty  */
-#line 226 "source.y"
+#line 225 "source.y"
                                             {genCode(INC_SCOPE, "", 0, -1, (yylsp[-6]).first_line); increaseScope();}
-#line 1590 "source.tab.c"
+#line 1589 "source.tab.c"
     break;
 
   case 35: /* $@14: %empty  */
-#line 228 "source.y"
+#line 227 "source.y"
                                             {genCode(DEC_SCOPE, "", 0, -1, (yylsp[-9]).first_line); decreaseScope(); genCode(GOTO, "", (yyvsp[-9].lbVal)->forGoto, 1, (yylsp[-9]).first_line); backPatch((yyvsp[-9].lbVal)->forJmpFalse, JMP_FALSE, "", getCurrentIndex(), 1, (yylsp[-9]).first_line);}
-#line 1596 "source.tab.c"
+#line 1595 "source.tab.c"
     break;
 
   case 37: /* $@15: %empty  */
-#line 230 "source.y"
+#line 229 "source.y"
                                             {genCode(INC_SCOPE, "", 0, -1, (yylsp[0]).first_line); increaseScope();}
-#line 1602 "source.tab.c"
+#line 1601 "source.tab.c"
     break;
 
   case 38: /* $@16: %empty  */
-#line 232 "source.y"
+#line 231 "source.y"
                                             {genCode(DEC_SCOPE, "", 0, -1, (yylsp[-3]).first_line); decreaseScope(); }
-#line 1608 "source.tab.c"
+#line 1607 "source.tab.c"
     break;
 
   case 46: /* instruction: T_PRINTF_SIMPLE  */
-#line 242 "source.y"
+#line 241 "source.y"
                                             {
                                                 genCode(PRINTF, (yyvsp[0].str), 0, 3, (yylsp[0]).first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
@@ -1626,11 +1625,11 @@ yyreduce:
                                                 //     printf("%c", buffer[i]);
                                                 // }
                                             }
-#line 1630 "source.tab.c"
+#line 1629 "source.tab.c"
     break;
 
   case 47: /* instruction: T_PRINTF_PARAM  */
-#line 259 "source.y"
+#line 258 "source.y"
                                             {
                                                 genCode(PRINTF, strdup((yyvsp[0].str)), 1, 2, (yylsp[0]).first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
@@ -1739,11 +1738,11 @@ yyreduce:
                                                     }
                                                 }
                                             }
-#line 1743 "source.tab.c"
+#line 1742 "source.tab.c"
     break;
 
   case 48: /* instruction: T_SCANF  */
-#line 367 "source.y"
+#line 366 "source.y"
                                             {
                                                 genCode(SCANF, strdup((yyvsp[0].str)), 0, 0, (yylsp[0]).first_line);
                                                 // if(errors > 0 || shouldExecute == 0) break;
@@ -1854,29 +1853,29 @@ yyreduce:
                                                 }
                                                 
                                             }
-#line 1858 "source.tab.c"
+#line 1857 "source.tab.c"
     break;
 
   case 52: /* type: T_INT_KW  */
-#line 490 "source.y"
+#line 489 "source.y"
                                             { currentType = t_integer; }
-#line 1864 "source.tab.c"
+#line 1863 "source.tab.c"
     break;
 
   case 53: /* type: T_DOUBLE_KW  */
-#line 491 "source.y"
+#line 490 "source.y"
                                             { currentType = t_double; }
-#line 1870 "source.tab.c"
+#line 1869 "source.tab.c"
     break;
 
   case 54: /* type: T_FLOAT_KW  */
-#line 492 "source.y"
+#line 491 "source.y"
                                             { currentType = t_float; }
-#line 1876 "source.tab.c"
+#line 1875 "source.tab.c"
     break;
 
   case 57: /* variable_declaration: T_IDENTIFIER  */
-#line 501 "source.y"
+#line 500 "source.y"
                                             { 
                                                 genCode(DECL, (yyvsp[0].str), currentType, 2, (yylsp[0]).first_line);
                                                 varRecord* ptr = addVar((yyvsp[0].str), currentType);  
@@ -1886,11 +1885,11 @@ yyreduce:
                                                     errors++;
                                                 }
                                             }
-#line 1890 "source.tab.c"
+#line 1889 "source.tab.c"
     break;
 
   case 58: /* variable_declaration: T_IDENTIFIER '=' expression  */
-#line 510 "source.y"
+#line 509 "source.y"
                                          {
                                             genCode(DECL, (yyvsp[-2].str), currentType, 2, (yylsp[-2]).first_line);
                                             genCode(STORE, (yyvsp[-2].str), 0, 0, (yylsp[-2]).first_line);
@@ -1903,14 +1902,14 @@ yyreduce:
                                             }
                                             // ptr->value = $3;
                                         }
-#line 1907 "source.tab.c"
+#line 1906 "source.tab.c"
     break;
 
   case 59: /* variable_load: T_IDENTIFIER '=' expression  */
-#line 525 "source.y"
+#line 524 "source.y"
                                         {
                                             genCode(STORE, (yyvsp[-2].str), 0, 0, (yylsp[-2]).first_line);
-                                            if (shouldExecute == 0) break; 
+                                            //if (shouldExecute == 0) break; 
                                             varRecord* ptr = getVar((yyvsp[-2].str));
                                             if(ptr == NULL)
                                             {
@@ -1920,11 +1919,11 @@ yyreduce:
                                             }
                                             // ptr->value = $3;
                                         }
-#line 1924 "source.tab.c"
+#line 1923 "source.tab.c"
     break;
 
   case 60: /* expression: T_IDENTIFIER  */
-#line 539 "source.y"
+#line 538 "source.y"
                                         {
                                             
                                             // if (shouldExecute == 0) break;  
@@ -1938,121 +1937,121 @@ yyreduce:
                                             genCode(DATA, (yyvsp[0].str), ptr->type, 0, (yylsp[0]).first_line);
 
                                         }
-#line 1942 "source.tab.c"
+#line 1941 "source.tab.c"
     break;
 
   case 61: /* expression: T_DOUBLE_VAL  */
-#line 552 "source.y"
+#line 551 "source.y"
                                             {genCode(DATA, "double", (yyvsp[0].dval), 1, (yylsp[0]).first_line);}
-#line 1948 "source.tab.c"
+#line 1947 "source.tab.c"
     break;
 
   case 62: /* expression: T_INTEGER_VAL  */
-#line 553 "source.y"
+#line 552 "source.y"
                                             {genCode(DATA, "int", (double)(yyvsp[0].intval), 1, (yylsp[0]).first_line);}
-#line 1954 "source.tab.c"
+#line 1953 "source.tab.c"
     break;
 
   case 63: /* expression: T_FLOAT_VAL  */
-#line 554 "source.y"
+#line 553 "source.y"
                                             {genCode(DATA, "float", (double)(yyvsp[0].fval), 1, (yylsp[0]).first_line);}
-#line 1960 "source.tab.c"
+#line 1959 "source.tab.c"
     break;
 
   case 64: /* expression: T_INT_CAST expression  */
-#line 555 "source.y"
+#line 554 "source.y"
                                             {genCode(CAST, varTypeName[t_integer], t_integer, 0, (yylsp[-1]).first_line);}
-#line 1966 "source.tab.c"
+#line 1965 "source.tab.c"
     break;
 
   case 65: /* expression: T_FLOAT_CAST expression  */
-#line 556 "source.y"
+#line 555 "source.y"
                                             {genCode(CAST, varTypeName[t_float], t_float, 0, (yylsp[-1]).first_line);}
-#line 1972 "source.tab.c"
+#line 1971 "source.tab.c"
     break;
 
   case 66: /* expression: T_DOUBLE_CAST expression  */
-#line 557 "source.y"
+#line 556 "source.y"
                                             {genCode(CAST, varTypeName[t_double], t_double, 0, (yylsp[-1]).first_line);}
-#line 1978 "source.tab.c"
+#line 1977 "source.tab.c"
     break;
 
   case 67: /* expression: expression '+' expression  */
-#line 558 "source.y"
+#line 557 "source.y"
                                             {genCode(ADD, "", 0, -1, (yylsp[-2]).first_line);  (yyval.dval) = (yyvsp[-2].dval) + (yyvsp[0].dval);}
-#line 1984 "source.tab.c"
+#line 1983 "source.tab.c"
     break;
 
   case 68: /* expression: expression '-' expression  */
-#line 559 "source.y"
+#line 558 "source.y"
                                             {genCode(SUB, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) - (yyvsp[0].dval);}
-#line 1990 "source.tab.c"
+#line 1989 "source.tab.c"
     break;
 
   case 69: /* expression: expression '*' expression  */
-#line 560 "source.y"
+#line 559 "source.y"
                                             {genCode(MUL, "", 0, -1, (yylsp[-2]).first_line);  (yyval.dval) = (yyvsp[-2].dval) * (yyvsp[0].dval);}
-#line 1996 "source.tab.c"
+#line 1995 "source.tab.c"
     break;
 
   case 70: /* expression: expression '/' expression  */
-#line 561 "source.y"
+#line 560 "source.y"
                                             {genCode(DIV, "", 0, -1, (yylsp[-2]).first_line);}
-#line 2002 "source.tab.c"
+#line 2001 "source.tab.c"
     break;
 
   case 71: /* expression: expression '<' expression  */
-#line 562 "source.y"
+#line 561 "source.y"
                                             {genCode(LT, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) < (yyvsp[0].dval);}
-#line 2008 "source.tab.c"
+#line 2007 "source.tab.c"
     break;
 
   case 72: /* expression: expression T_LE expression  */
-#line 563 "source.y"
+#line 562 "source.y"
                                             {genCode(LE, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) <= (yyvsp[0].dval);}
-#line 2014 "source.tab.c"
+#line 2013 "source.tab.c"
     break;
 
   case 73: /* expression: expression '>' expression  */
-#line 564 "source.y"
+#line 563 "source.y"
                                             {genCode(GT, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) > (yyvsp[0].dval);}
-#line 2020 "source.tab.c"
+#line 2019 "source.tab.c"
     break;
 
   case 74: /* expression: expression T_GE expression  */
-#line 565 "source.y"
+#line 564 "source.y"
                                             {genCode(GE, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) >= (yyvsp[0].dval);}
-#line 2026 "source.tab.c"
+#line 2025 "source.tab.c"
     break;
 
   case 75: /* expression: expression T_EQ expression  */
-#line 566 "source.y"
+#line 565 "source.y"
                                             {genCode(EQ, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) == (yyvsp[0].dval);}
-#line 2032 "source.tab.c"
+#line 2031 "source.tab.c"
     break;
 
   case 76: /* expression: expression T_NEQ expression  */
-#line 567 "source.y"
+#line 566 "source.y"
                                             {genCode(NEQ, "", 0, -1, (yylsp[-2]).first_line); (yyval.dval) = (yyvsp[-2].dval) != (yyvsp[0].dval);}
-#line 2038 "source.tab.c"
+#line 2037 "source.tab.c"
     break;
 
   case 77: /* expression: '(' expression ')'  */
-#line 568 "source.y"
-                                            {if (shouldExecute == 0) break; (yyval.dval) = (yyvsp[-1].dval);}
-#line 2044 "source.tab.c"
+#line 567 "source.y"
+                                            {/*if (shouldExecute == 0) break;*/ (yyval.dval) = (yyvsp[-1].dval);}
+#line 2043 "source.tab.c"
     break;
 
   case 78: /* expression: function_call  */
-#line 569 "source.y"
+#line 568 "source.y"
                                             {
                                                 
                                             }
-#line 2052 "source.tab.c"
+#line 2051 "source.tab.c"
     break;
 
 
-#line 2056 "source.tab.c"
+#line 2055 "source.tab.c"
 
       default: break;
     }
@@ -2250,7 +2249,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 574 "source.y"
+#line 573 "source.y"
 
 
 /**********************************
@@ -2260,12 +2259,34 @@ yyreturnlab:
 int main(int argc, char** argv)
 {   
     currentState = parsing;
+    char c;
+    char buffer[1024];
     if (argc == 2) {
         yyin = fopen(argv[1], "r");
         if (!yyin) {
             perror("Error opening file");
             return 1;
         }
+    }
+    else
+    {
+        printf("Doriti sa introduceti fisier de la tastatura? [y/n]\n");
+        scanf("%c", &c);
+    }
+    if(c == 'y')
+    {
+        printf("Introduceti numele fisierului: ");
+        scanf("%s", buffer);
+        yyin = fopen(buffer, "r");
+        if(!yyin)
+        {
+            perror("Error opening file");
+            return 1;
+        }
+    }
+    else if(argc == 1)
+    {
+        printf("Introduceti codul manual:\n");
     }
     yyparse();
     currentState = executing;
